@@ -6,6 +6,9 @@ name = "pypi"
 [packages]
 
 [dev-packages]
+pytest = "*"
+pytest-cov = "*"
+pytest-xdist = "*"
 
 [requires]
 python_version = "3.6"
