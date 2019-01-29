@@ -2,4 +2,5 @@
 .mypy_cache
 *.pyc
 
-ideas.txt
+.coverage
+coverage.xml

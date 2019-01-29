@@ -1,5 +1,8 @@
 from setuptools import setup, find_packages
 
+with open('requirements.txt') as f:
+    required = f.read().splitlines()
+
 setup(
     name="intervallum",
     version="0.0.1",
@@ -25,6 +28,6 @@ setup(
 
     packages=find_packages(exclude=['intervallum.tests']),
 
-    install_requires=[]
+    install_requires=required
 
 )
