@@ -78,12 +78,8 @@ def test_reduction_1(i4: Interval):
     assert i4 == i4._try_to_reduce()
 
 
-def test_reduction_2(i4: Interval):
-    init_value = IntervalConstants._reduction_width
-    IntervalConstants._reduction_width = 0.5
-
-    assert i4._try_to_reduce() == Interval.from_point(i4.middle)
-
-    IntervalConstants._reduction_width = init_value
+def test_reduction_2():
+    i = Interval(1.0, 1.0 + 1e-7)
+    assert i._try_to_reduce() == Interval.from_point(i.middle)
 
 
