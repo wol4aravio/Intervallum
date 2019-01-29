@@ -2,4 +2,4 @@
 omit =
     setup.py
     *__init__.py
-    intervallum/tests/*
+    tests/*

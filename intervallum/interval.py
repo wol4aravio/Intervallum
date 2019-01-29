@@ -1,5 +1,5 @@
 from copy import copy
-from typing import Any, Union, Callable
+from typing import Union, Callable
 import functools
 
 
@@ -10,21 +10,21 @@ def reduce_result(f: Callable[..., IntervalNumber]) -> Callable[..., IntervalNum
     @functools.wraps(f)
     def wrapper(*args, **kwargs):
         i: Interval = f(*args, **kwargs)
-        return i._try_to_reduce() if Interval._reduce_intervals_to_numbers else i
+        return i._try_to_reduce() if IntervalConstants._reduce_intervals_to_numbers else i
 
     return wrapper
 
 
 class Interval:
 
-    _reduce_intervals_to_numbers: bool = True
-    _reduction_width: float = 1e-5
-    _admissible_error: float = 1e-7
-
     __slots__ = ["__lb", "__ub"]
 
-    def __init__(self, lower_bound: float, upper_bound: float):
+    def __init__(self, lower_bound: float, upper_bound: float, fix: bool = False):
         if lower_bound > upper_bound:
+            if fix:
+                self.__lb = upper_bound
+                self.__ub = lower_bound
+                return
             raise IntervalExceptions.WrongBoundsException(lower_bound, upper_bound)
         self.__lb = lower_bound
         self.__ub = upper_bound
@@ -73,7 +73,7 @@ class Interval:
         return Interval(self.__lb, self.__ub)
 
     def _try_to_reduce(self) -> IntervalNumber:
-        if (self.__ub - self.__lb) < Interval._reduction_width:
+        if (self.__ub - self.__lb) < IntervalConstants._reduction_width:
             return 0.5 * (self.__lb + self.__ub)
         else:
             return copy(self)
@@ -83,21 +83,30 @@ class Interval:
     def inner_subtraction(i1: IntervalNumber, i2: IntervalNumber) -> IntervalNumber:
         _i1: Interval = i1 if isinstance(i1, Interval) else Interval.from_point(i1)
         _i2: Interval = i2 if isinstance(i2, Interval) else Interval.from_point(i2)
-        return Interval(_i1.__lb - _i2.__lb, _i1.__ub - _i2.__ub)
+        return Interval(_i1.__lb - _i2.__lb, _i1.__ub - _i2.__ub, fix=True)
 
     def __lshift__(self, other: IntervalNumber) -> IntervalNumber:
         return Interval.inner_subtraction(self, other)
 
     def __eq__(self, other: object) -> bool:
         if not (isinstance(other, float) or isinstance(other, Interval)):
-            raise NotImplemented()
+            raise NotImplementedError()
         else:
             distance: IntervalNumber = self << other
             if isinstance(distance, Interval):
-                distance = distance.width
+                distance = 0.5 * (abs(distance.__lb) + abs(distance.__ub))
             else:
                 distance = abs(distance)
-            return distance <= Interval._admissible_error
+            return distance <= IntervalConstants._admissible_error
+
+    def __ne__(self, other: object) -> bool:
+        return not self.__eq__(other)
+
+
+class IntervalConstants:
+    _reduce_intervals_to_numbers: bool = True
+    _reduction_width: float = 1e-5
+    _admissible_error: float = 1e-7
 
 
 class IntervalExceptions:

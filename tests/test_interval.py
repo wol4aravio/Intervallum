@@ -3,8 +3,7 @@ from copy import copy
 import pytest
 from numpy.testing import assert_almost_equal
 
-from intervallum.interval import Interval
-from intervallum.interval import IntervalExceptions
+from intervallum.interval import Interval, IntervalConstants, IntervalExceptions
 
 
 @pytest.fixture(scope="session")
@@ -53,9 +52,16 @@ def test_interval_exceptions():
 
 
 def test_string_representation(i1: Interval, i4: Interval, i6: Interval):
-    assert str(i1) == '[-1.0; 2.0]'
-    assert str(i4) == '[5.0; 5.1]'
-    assert str(i6) == '[-2.0; 0.0]'
+    assert str(i1) == "[-1.0; 2.0]"
+    assert str(i4) == "[5.0; 5.1]"
+    assert i6.__repr__() == "[-2.0; 0.0]"
+
+
+def test_equality(i1: Interval, i2: Interval):
+    assert i1 == copy(i1)
+    assert i1 != i2
+    with pytest.raises(NotImplementedError):
+        _ = i1 == "Interval"
 
 
 def test_middle(i2: Interval, i3: Interval):
@@ -68,7 +74,16 @@ def test_width(i7: Interval, i4: Interval):
     assert_almost_equal(i4.width, 0.1)
 
 
-def test_reduction(i7: Interval):
-    i = copy(i7)
-    assert i == i._try_to_reduce()
+def test_reduction_1(i4: Interval):
+    assert i4 == i4._try_to_reduce()
+
+
+def test_reduction_2(i4: Interval):
+    init_value = IntervalConstants._reduction_width
+    IntervalConstants._reduction_width = 0.5
+
+    assert i4._try_to_reduce() == Interval.from_point(i4.middle)
+
+    IntervalConstants._reduction_width = init_value
+
 

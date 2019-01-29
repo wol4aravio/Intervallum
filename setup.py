@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-with open('requirements.txt') as f:
+with open("requirements.txt") as f:
     required = f.read().splitlines()
 
 setup(
@@ -26,7 +26,7 @@ setup(
 
     keywords="",
 
-    packages=find_packages(exclude=['intervallum.tests']),
+    packages=find_packages(exclude=["tests"]),
 
     install_requires=required
 
