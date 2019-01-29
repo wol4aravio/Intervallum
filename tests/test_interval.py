@@ -45,8 +45,14 @@ def test_interval_exceptions():
     with pytest.raises(IntervalExceptions.WrongBoundsException):
         _ = Interval(1, -1)
     i = Interval(1, 2)
+
+    i.lb = 1.5
+    assert_almost_equal(i.lb, 1.5)
     with pytest.raises(IntervalExceptions.WrongBoundsException):
         i.lb = 3
+
+    i.ub = 1.9
+    assert_almost_equal(i.ub, 1.9)
     with pytest.raises(IntervalExceptions.WrongBoundsException):
         i.ub = 0
 
