@@ -1,3 +1,5 @@
+from copy import copy
+
 import pytest
 from numpy.testing import assert_almost_equal
 
@@ -65,4 +67,8 @@ def test_width(i7: Interval, i4: Interval):
     assert_almost_equal(i7.width, 3)
     assert_almost_equal(i4.width, 0.1)
 
+
+def test_reduction(i7: Interval):
+    i = copy(i7)
+    assert i == i._try_to_reduce()
 
