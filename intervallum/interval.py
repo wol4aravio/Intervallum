@@ -1,4 +1,5 @@
-import numpy as np
+from typing import Union
+
 
 class Interval:
 
@@ -14,3 +15,12 @@ class Interval:
         else:
             self.lb = lower_bound
             self.ub = upper_bound
+
+    def __add__(self, other: Union["Interval", float]) -> "Interval":
+        if isinstance(other, Interval):
+            return Interval(self.lb + other.lb, self.ub + other.ub)
+        else:
+            return Interval(self.lb + other, self.ub + other)
+
+    def __radd__(self, other: Union["Interval", float]) -> "Interval":
+        return self + other
