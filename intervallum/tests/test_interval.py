@@ -56,4 +56,12 @@ def test_string_representation(i1: Interval, i4: Interval, i6: Interval):
     assert str(i6) == '[-2.0; 0.0]'
 
 
+def test_middle(i2: Interval, i3: Interval):
+    assert_almost_equal(i2.middle, -0.5)
+    assert_almost_equal(i3.middle, 1.5)
+
+def test_width(i7: Interval, i4: Interval):
+    assert_almost_equal(i7.width, 3)
+    assert_almost_equal(i4.width, 0.1)
+
 

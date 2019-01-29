@@ -53,6 +53,14 @@ class Interval:
         else:
             self.__ub = upper_bound
 
+    @property
+    def middle(self) -> float:
+        return 0.5 * (self.__lb + self.__ub)
+
+    @property
+    def width(self) -> float:
+        return self.__ub - self.__lb
+
     def __str__(self) -> str:
         return f"[{self.__lb}; {self.__ub}]"
 
