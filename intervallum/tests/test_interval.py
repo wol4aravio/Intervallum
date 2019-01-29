@@ -52,10 +52,11 @@ def test_string_representation(i1: Interval, i4: Interval, i6: Interval):
 
 
 def test_interval_creation(i1: Interval):
-    assert_almost_equal(i1.lb, -1.0)
-    assert_almost_equal(i1.ub, 2.0)
+    assert_almost_equal(i1.__lb, -1.0)
+    assert_almost_equal(i1.__ub, 2.0)
 
     i2 = Interval(-1e-8, 1e-8)
-    assert_almost_equal(i2.lb, 0.0)
-    assert_almost_equal(i2.ub, 0.0)
+    assert_almost_equal(i2.__lb, 0.0)
+    assert_almost_equal(i2.__ub, 0.0)
+
 
