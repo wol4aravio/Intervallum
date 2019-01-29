@@ -125,6 +125,20 @@ class Interval:
     def __rsub__(self, other: IntervalNumber) -> IntervalNumber:
         return (-self) + other
 
+    @reduce_result
+    def __mul__(self, other: IntervalNumber) -> IntervalNumber:
+        left_operand = [self.__lb, self.__ub]
+        if isinstance(other, Interval):
+            right_operand = [other.__lb, other.__ub]
+        else:
+            right_operand = [other]
+        products = [l * r for l in left_operand for r in right_operand]
+        return Interval(min(products), max(products))
+
+    @reduce_result
+    def __rmul__(self, other: IntervalNumber) -> IntervalNumber:
+        return self * other
+
 
 
 class IntervalConstants:
