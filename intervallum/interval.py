@@ -6,7 +6,7 @@ import functools
 IntervalNumber = Union["Interval", float]
 
 
-def reduce_result(f: Callable[..., "Interval"]) -> Callable[..., "Interval"]:
+def reduce_result(f: Callable[..., IntervalNumber]) -> Callable[..., IntervalNumber]:
     @functools.wraps(f)
     def wrapper(*args, **kwargs):
         i: Interval = f(*args, **kwargs)
