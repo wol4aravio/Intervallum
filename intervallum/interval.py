@@ -1,16 +1,18 @@
 from typing import Union
 
 
-IntervalNumber = Union["Interval", float]
+_IntervalNumber = Union["Interval", float]
+
 
 class Interval:
 
+    _reduce_intervals_to_numbers: bool = True
     _reduction_width: float = 1e-5
     _admissible_error: float = 1e-7
 
     __slots__ = ["__lb", "__ub"]
 
-    def __init__(self, lower_bound: float, upper_bound: float, point_value: float = None, reduce: bool = True):
+    def __init__(self, lower_bound: float, upper_bound: float, point_value: float = None):
         if point_value:
             self.__lb = point_value
             self.__ub = point_value
@@ -19,17 +21,18 @@ class Interval:
                 raise IntervalExceptions.WrongBoundsException(lower_bound, upper_bound)
             self.__lb = lower_bound
             self.__ub = upper_bound
-            if reduce and (upper_bound - lower_bound) < Interval._reduction_width:
-                self._reduce()
 
-    def _try_to_reduce(self, reduction_width: float = _reduction_width) -> None:
-        if reduce and (upper_bound - lower_bound) < Interval._reduction_width:
-            middle = 0.5 * (self.__lb + self.__ub)
-            self.__lb = middle
-            self.__ub = middle
+    def copy(self) -> "Interval":
+        return Interval(self.__lb, self.__ub)
+
+    def _try_to_reduce(self) -> _IntervalNumber:
+        if (self.__ub - self.__lb) < Interval._reduction_width:
+            return 0.5 * (self.__lb + self.__ub)
+        else:
+            return self.copy()
 
     @property
-    def lb(self):
+    def lb(self) -> float:
         return self.__lb
 
     @lb.setter
@@ -40,7 +43,7 @@ class Interval:
             self.__lb = lower_bound
 
     @property
-    def ub(self):
+    def ub(self) -> float:
         return self.__ub
 
     @ub.setter
@@ -51,7 +54,7 @@ class Interval:
             self.__ub = upper_bound
 
     def __str__(self) -> str:
-        return f"[{self._lb}; {self._ub}]"
+        return f"[{self.__lb}; {self.__ub}]"
 
     def __repr__(self) -> str:
         return self.__str__()

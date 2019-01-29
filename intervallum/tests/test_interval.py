@@ -43,6 +43,11 @@ def i7() -> Interval:
 def test_interval_exceptions():
     with pytest.raises(IntervalExceptions.WrongBoundsException):
         _ = Interval(1, -1)
+    i = Interval(1, 2)
+    with pytest.raises(IntervalExceptions.WrongBoundsException):
+        i.lb = 3
+    with pytest.raises(IntervalExceptions.WrongBoundsException):
+        i.ub = 0
 
 
 def test_string_representation(i1: Interval, i4: Interval, i6: Interval):
@@ -50,13 +55,5 @@ def test_string_representation(i1: Interval, i4: Interval, i6: Interval):
     assert str(i4) == '[5.0; 5.1]'
     assert str(i6) == '[-2.0; 0.0]'
 
-
-def test_interval_creation(i1: Interval):
-    assert_almost_equal(i1.__lb, -1.0)
-    assert_almost_equal(i1.__ub, 2.0)
-
-    i2 = Interval(-1e-8, 1e-8)
-    assert_almost_equal(i2.__lb, 0.0)
-    assert_almost_equal(i2.__ub, 0.0)
 
 
