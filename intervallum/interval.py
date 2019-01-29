@@ -18,11 +18,13 @@ class Interval:
             self.lb = lower_bound
             self.ub = upper_bound
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"[{self.lb}; {self.ub}]"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.__str__()
+
+
 
     def __add__(self, other: Union["Interval", float]) -> "Interval":
         if isinstance(other, Interval):
