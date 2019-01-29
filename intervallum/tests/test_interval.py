@@ -2,6 +2,7 @@ import pytest
 from numpy.testing import assert_almost_equal
 
 from intervallum.interval import Interval
+from intervallum.interval import IntervalExceptions
 
 
 @pytest.fixture(scope="session")
@@ -17,6 +18,11 @@ def i2() -> Interval:
 @pytest.fixture(scope="session")
 def i3() -> Interval:
     return Interval(-3.0, -1.0)
+
+
+def test_interval_exceptions():
+    with pytest.raises(IntervalExceptions.WrongBoundsException):
+        _ = Interval(1, -1)
 
 
 def test_interval_creation(i1: Interval):
