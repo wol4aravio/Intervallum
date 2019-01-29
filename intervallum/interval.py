@@ -22,6 +22,12 @@ class Interval:
             self.__lb = lower_bound
             self.__ub = upper_bound
 
+    def __str__(self) -> str:
+        return f"[{self.__lb}; {self.__ub}]"
+
+    def __repr__(self) -> str:
+        return self.__str__()
+
     def copy(self) -> "Interval":
         return Interval(self.__lb, self.__ub)
 
@@ -60,12 +66,6 @@ class Interval:
     @property
     def width(self) -> float:
         return self.__ub - self.__lb
-
-    def __str__(self) -> str:
-        return f"[{self.__lb}; {self.__ub}]"
-
-    def __repr__(self) -> str:
-        return self.__str__()
 
 
 class IntervalExceptions:
