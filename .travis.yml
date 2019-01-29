@@ -15,6 +15,7 @@ install:
   - pipenv install
   - pipenv install --dev
 script:
+  - set -e
   - mypy --ignore-missing-imports .
   - pipenv run pytest -v -n 2 -s --cov=./
   - coverage xml
