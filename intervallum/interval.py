@@ -102,6 +102,18 @@ class Interval:
     def __ne__(self, other: object) -> bool:
         return not self.__eq__(other)
 
+    @reduce_result
+    def __add__(self, other: IntervalNumber) -> IntervalNumber:
+        if isinstance(other, Interval):
+            return Interval(self.__lb + other.__lb, self.__ub + other.__ub)
+        else:
+            return Interval(self.__lb + other, self.__ub + other)
+
+    @reduce_result
+    def __radd__(self, other: IntervalNumber) -> IntervalNumber:
+        return self + other
+
+
 
 class IntervalConstants:
     _reduce_intervals_to_numbers: bool = True

@@ -74,12 +74,15 @@ def test_width(i7: Interval, i4: Interval):
     assert_almost_equal(i4.width, 0.1)
 
 
-def test_reduction_1(i4: Interval):
+def test_reduction(i4: Interval):
     assert i4 == i4._try_to_reduce()
-
-
-def test_reduction_2():
     i = Interval(1.0, 1.0 + 1e-7)
     assert i._try_to_reduce() == Interval.from_point(i.middle)
 
 
+def test_addition(i1: Interval, i2: Interval, i3: Interval, i4: Interval, i5: Interval):
+    assert (i1 + 2.0) == Interval(1.0, 4.0)
+    assert (2.0 + i1) == Interval(1.0, 4.0)
+    assert (i1 + i2) == Interval(-5.0, 5.0)
+    assert (i2 + i3) == Interval(-3.0, 5.0)
+    assert (i5 + i4) == Interval(-1.0, 0.1)
