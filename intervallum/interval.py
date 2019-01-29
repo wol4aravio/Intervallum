@@ -113,6 +113,18 @@ class Interval:
     def __radd__(self, other: IntervalNumber) -> IntervalNumber:
         return self + other
 
+    @reduce_result
+    def __neg__(self) -> IntervalNumber:
+        return Interval(-self.__ub, -self.__lb)
+
+    @reduce_result
+    def __sub__(self, other: IntervalNumber) -> IntervalNumber:
+        return self + (-other)
+
+    @reduce_result
+    def __rsub__(self, other: IntervalNumber) -> IntervalNumber:
+        return (-self) + other
+
 
 
 class IntervalConstants:

@@ -92,3 +92,11 @@ def test_addition(i1: Interval, i2: Interval, i3: Interval, i4: Interval, i5: In
     assert (i1 + i2) == Interval(-5.0, 5.0)
     assert (i2 + i3) == Interval(-3.0, 5.0)
     assert (i5 + i4) == Interval(-1.0, 0.1)
+
+
+def test_subtraction(i1: Interval, i2: Interval, i3: Interval, i4: Interval, i5: Interval):
+    assert (i1 - 1) == Interval(-2.0, 1.0)
+    assert (1.0 - i1) == Interval(-1.0, 2.0)
+    assert (i1 - i2) == Interval(-4.0, 6.0)
+    assert (i2 - i3) == Interval(-6.0, 2.0)
+    assert (i5 - i4) == Interval(-11.1, -10.0)
