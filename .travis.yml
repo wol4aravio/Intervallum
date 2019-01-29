@@ -10,7 +10,7 @@ python:
 install:
   - pip install pipenv
   - pip install twine
-  - pip install codacy-coverage
+  - pip install codecov
   - pipenv install
   - pipenv install --dev
 script:
