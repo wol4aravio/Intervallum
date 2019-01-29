@@ -1,6 +1,7 @@
 from copy import copy
 from typing import Union, Callable
 import functools
+from math import inf, isnan
 
 
 IntervalNumber = Union["Interval", float]
@@ -94,6 +95,8 @@ class Interval:
         else:
             distance: IntervalNumber = self << other
             if isinstance(distance, Interval):
+                distance.__lb = 0 if isnan(distance.__lb) else distance.__lb
+                distance.__ub = 0 if isnan(distance.__ub) else distance.__ub
                 distance = 0.5 * (abs(distance.__lb) + abs(distance.__ub))
             else:
                 distance = abs(distance)
@@ -139,6 +142,25 @@ class Interval:
     def __rmul__(self, other: IntervalNumber) -> IntervalNumber:
         return self * other
 
+    @reduce_result
+    def __invert__(self) -> IntervalNumber:
+        if self.__lb > 0 or self.__ub < 0:
+            return Interval(1.0 / self.__ub, 1.0 / self.__lb)
+        elif self.__lb == 0:
+            return Interval(1.0 / self.__ub, inf)
+        elif self.__ub == 0.0:
+            return Interval(-inf, 1.0 / self.__lb)
+        else:
+            return Interval(-inf, inf)
+
+    def __truediv__(self, other: IntervalNumber) -> IntervalNumber:
+        if isinstance(other, Interval):
+            return self * (~other)
+        else:
+            return self * (1.0 / other)
+
+    def __rtruediv__(self, other: IntervalNumber) -> IntervalNumber:
+        return other * (~self)
 
 
 class IntervalConstants:

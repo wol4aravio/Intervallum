@@ -1,4 +1,5 @@
 from copy import copy
+from math import inf
 
 import pytest
 from numpy.testing import assert_almost_equal
@@ -108,3 +109,13 @@ def test_multiplication(i1: Interval, i2: Interval, i3: Interval, i4: Interval, 
     assert (i1 * i2) == Interval(-8.0, 6.0)
     assert (i2 * i3) == Interval(-8.0, 6.0)
     assert (i5 * i4) == Interval(-30.6, -25.0)
+
+
+def test_division(i1: Interval, i2: Interval, i3: Interval, i4: Interval, i5: Interval, i6: Interval, i7: Interval):
+    assert (i1 / 2.0) == Interval(-0.5, 1.0)
+    assert (2.0 / i1) == Interval(-inf, inf)
+    assert (i1 / i2) == Interval(-inf, inf)
+    assert (i2 / i3) == Interval(-4.0, 3.0)
+    assert (i1 / i5) == Interval(-0.4, 0.2)
+    assert (i3 / i6) == Interval(-inf, -0.5)
+    assert (i5 / i7) == Interval(-inf, -5.0 / 3.0)
