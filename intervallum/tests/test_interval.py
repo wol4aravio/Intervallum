@@ -25,6 +25,12 @@ def test_interval_exceptions():
         _ = Interval(1, -1)
 
 
+def test_string_representation(i1: Interval, i2: Interval, i3: Interval):
+    assert str(i1) == "[0.0; 1.0]"
+    assert str(i2) == "[-1.0; 2.0]"
+    assert str(i3) == "[-3.0; -1.0]"
+
+
 def test_interval_creation(i1: Interval):
     assert_almost_equal(i1.lb, 0.0)
     assert_almost_equal(i1.ub, 1.0)
