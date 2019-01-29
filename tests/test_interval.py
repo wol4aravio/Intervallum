@@ -3,7 +3,7 @@ from copy import copy
 import pytest
 from numpy.testing import assert_almost_equal
 
-from intervallum.interval import Interval, IntervalConstants, IntervalExceptions
+from intervallum.interval import Interval, IntervalExceptions
 
 
 @pytest.fixture(scope="session")

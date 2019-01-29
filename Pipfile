@@ -4,7 +4,6 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-numpy = "*"
 
 [dev-packages]
 pytest = "*"
@@ -12,6 +11,7 @@ pytest-cov = "*"
 pytest-xdist = "*"
 mypy = "*"
 pipenv-to-requirements = "*"
+numpy = "*"
 
 [requires]
 python_version = "3.6"
