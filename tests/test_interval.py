@@ -133,3 +133,10 @@ def test_sin(i1: Interval, i2: Interval, i3: Interval, i6: Interval):
     assert sin(i2) == Interval(-1.0, 1.0)
     assert sin(i3) == Interval(math.sin(1.0), 1.0)
     assert sin(i6) == Interval(-1.0, 0.0)
+
+
+def test_cos(i1: Interval, i2: Interval, i3: Interval, i6: Interval):
+    assert cos(i1) == Interval(math.cos(2.0), 1.0)
+    assert cos(i2) == Interval(-1.0, 1.0)
+    assert cos(i3) == Interval(math.cos(2.0), math.cos(1.0))
+    assert cos(i6) == Interval(math.cos(-2.0), 1.0)

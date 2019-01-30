@@ -19,3 +19,12 @@ def sin(i: "Interval") -> Tuple[Callable[[float], float], List[float]]:
         return lambda x: x, [-1.0, 1.0]
     else:
         return lambda x: math.sin(x), _get_points_for_trig(i.lb, i.ub)
+
+
+@reduce_result
+@monotonic
+def cos(i: "Interval") -> Tuple[Callable[[float], float], List[float]]:
+    if i.width >= 2 * math.pi:
+        return lambda x: x, [-1.0, 1.0]
+    else:
+        return lambda x: math.cos(x), _get_points_for_trig(i.lb, i.ub)
