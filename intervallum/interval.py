@@ -7,12 +7,11 @@ from math import inf, isnan
 IntervalNumber = Union["Interval", float]
 
 
-def reduce_result(f: Callable[..., IntervalNumber]) -> Callable[..., IntervalNumber]:
+def reduce_result(f: Callable[..., "Interval"]) -> Callable[..., IntervalNumber]:
     @functools.wraps(f)
     def wrapper(*args, **kwargs):
-        i: Interval = f(*args, **kwargs)
+        i = f(*args, **kwargs)
         return i._try_to_reduce() if IntervalConstants._reduce_intervals_to_numbers else i
-
     return wrapper
 
 
@@ -70,7 +69,7 @@ class Interval:
     def width(self) -> float:
         return self.__ub - self.__lb
 
-    def __copy__(self):
+    def __copy__(self) -> "Interval":
         return Interval(self.__lb, self.__ub)
 
     def _try_to_reduce(self) -> IntervalNumber:
@@ -81,7 +80,7 @@ class Interval:
 
     @staticmethod
     @reduce_result
-    def inner_subtraction(i1: IntervalNumber, i2: IntervalNumber) -> IntervalNumber:
+    def inner_subtraction(i1: IntervalNumber, i2: IntervalNumber) -> "Interval":
         _i1: Interval = i1 if isinstance(i1, Interval) else Interval.from_point(i1)
         _i2: Interval = i2 if isinstance(i2, Interval) else Interval.from_point(i2)
         return Interval(_i1.__lb - _i2.__lb, _i1.__ub - _i2.__ub, fix=True)
@@ -106,30 +105,27 @@ class Interval:
         return not self.__eq__(other)
 
     @reduce_result
-    def __add__(self, other: IntervalNumber) -> IntervalNumber:
+    def __add__(self, other: IntervalNumber) -> "Interval":
         if isinstance(other, Interval):
             return Interval(self.__lb + other.__lb, self.__ub + other.__ub)
         else:
             return Interval(self.__lb + other, self.__ub + other)
 
-    @reduce_result
     def __radd__(self, other: IntervalNumber) -> IntervalNumber:
         return self + other
 
     @reduce_result
-    def __neg__(self) -> IntervalNumber:
+    def __neg__(self) -> "Interval":
         return Interval(-self.__ub, -self.__lb)
 
-    @reduce_result
     def __sub__(self, other: IntervalNumber) -> IntervalNumber:
         return self + (-other)
 
-    @reduce_result
     def __rsub__(self, other: IntervalNumber) -> IntervalNumber:
         return (-self) + other
 
     @reduce_result
-    def __mul__(self, other: IntervalNumber) -> IntervalNumber:
+    def __mul__(self, other: IntervalNumber) -> "Interval":
         left_operand = [self.__lb, self.__ub]
         if isinstance(other, Interval):
             right_operand = [other.__lb, other.__ub]
@@ -138,12 +134,11 @@ class Interval:
         products = [l * r for l in left_operand for r in right_operand]
         return Interval(min(products), max(products))
 
-    @reduce_result
     def __rmul__(self, other: IntervalNumber) -> IntervalNumber:
         return self * other
 
     @reduce_result
-    def __invert__(self) -> IntervalNumber:
+    def __invert__(self) -> "Interval":
         if self.__lb > 0 or self.__ub < 0:
             return Interval(1.0 / self.__ub, 1.0 / self.__lb)
         elif self.__lb == 0:
