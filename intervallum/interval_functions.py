@@ -28,3 +28,12 @@ def cos(i: "Interval") -> Tuple[Callable[[float], float], List[float]]:
         return lambda x: x, [-1.0, 1.0]
     else:
         return lambda x: math.cos(x), _get_points_for_trig(i.lb, i.ub)
+
+
+@reduce_result
+@monotonic
+def abs(i: "Interval") -> Tuple[Callable[[float], float], List[float]]:
+    points = [i.lb, i.ub]
+    if i.lb * i.ub < 0:
+        points.append(0.0)
+    return lambda x: math.fabs(x), points

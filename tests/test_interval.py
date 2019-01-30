@@ -140,3 +140,13 @@ def test_cos(i1: Interval, i2: Interval, i3: Interval, i6: Interval):
     assert cos(i2) == Interval(-1.0, 1.0)
     assert cos(i3) == Interval(math.cos(2.0), math.cos(1.0))
     assert cos(i6) == Interval(math.cos(-2.0), 1.0)
+
+
+def test_abs(i1: Interval, i2: Interval, i3: Interval, i4: Interval, i5: Interval, i6: Interval, i7: Interval):
+    assert abs(i1) == Interval(0.0, 2.0)
+    assert abs(i2) == Interval(0.0, 4.0)
+    assert abs(i3) == Interval(1.0, 2.0)
+    assert abs(i4) == Interval(5.0, 5.1)
+    assert abs(i5) == Interval(5.0, 6.0)
+    assert abs(i6) == Interval(0.0, 2.0)
+    assert abs(i7) == Interval(0.0, 3.0)
