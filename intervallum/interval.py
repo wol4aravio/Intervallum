@@ -19,8 +19,13 @@ def monotonic(f: Callable[..., Tuple[Callable[[float], float], List[float]]]) ->
     @functools.wraps(f)
     def wrapper(*args, **kwargs):
         math_f, points = f(*args, **kwargs)
-        values = list(map(math_f, points))
-        return Interval(min(values), max(values))
+        min_, max_ = inf, -inf
+        for v in map(math_f, points):
+            if v < min_:
+                min_ = v
+            if v > max_:
+                max_ = v
+        return Interval(min_, max_)
     return wrapper
 
 
@@ -183,6 +188,8 @@ class Interval:
             return self._power_even(power)
         else:
             return self._power_odd(power)
+
+
 
 
 class IntervalConstants:
