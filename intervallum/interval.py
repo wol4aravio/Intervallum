@@ -105,15 +105,15 @@ class Interval:
     def __eq__(self, other: object) -> bool:
         if not (isinstance(other, float) or isinstance(other, Interval)):
             raise NotImplementedError()
+        
+        distance: IntervalNumber = self << other
+        if isinstance(distance, Interval):
+            distance.__lb = 0 if math.isnan(distance.__lb) else distance.__lb
+            distance.__ub = 0 if math.isnan(distance.__ub) else distance.__ub
+            distance = 0.5 * (abs(distance.__lb) + abs(distance.__ub))
         else:
-            distance: IntervalNumber = self << other
-            if isinstance(distance, Interval):
-                distance.__lb = 0 if math.isnan(distance.__lb) else distance.__lb
-                distance.__ub = 0 if math.isnan(distance.__ub) else distance.__ub
-                distance = 0.5 * (abs(distance.__lb) + abs(distance.__ub))
-            else:
-                distance = abs(distance)
-            return distance <= IntervalConstants._admissible_error
+            distance = abs(distance)
+        return distance <= IntervalConstants._admissible_error
 
     def __ne__(self, other: object) -> bool:
         return not self.__eq__(other)
