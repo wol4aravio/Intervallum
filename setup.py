@@ -1,8 +1,15 @@
+import os
 from setuptools import setup, find_packages
+
+if os.path.exists("requirements.txt"):
+    with open("requirements.txt") as f:
+        required = f.read().splitlines()
+else:
+    required = []
 
 setup(
     name="intervallum",
-    version="0.0.1",
+    version="0.0.2",
 
     description="Intervallum - package for interval computations",
 
@@ -23,8 +30,8 @@ setup(
 
     keywords="",
 
-    packages=find_packages(exclude=['intervallum.tests']),
+    packages=find_packages(exclude=["tests"]),
 
-    install_requires=[]
+    install_requires=required
 
 )
