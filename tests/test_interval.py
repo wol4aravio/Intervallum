@@ -1,10 +1,10 @@
 from copy import copy
-from math import inf
+import math
 
 import pytest
 from numpy.testing import assert_almost_equal
 
-from intervallum.interval import Interval, IntervalExceptions
+from intervallum.interval_functions import *
 
 
 @pytest.fixture(scope="session")
@@ -113,15 +113,64 @@ def test_multiplication(i1: Interval, i2: Interval, i3: Interval, i4: Interval, 
 
 def test_division(i1: Interval, i2: Interval, i3: Interval, i4: Interval, i5: Interval, i6: Interval, i7: Interval):
     assert (i1 / 2.0) == Interval(-0.5, 1.0)
-    assert (2.0 / i1) == Interval(-inf, inf)
-    assert (i1 / i2) == Interval(-inf, inf)
+    assert (2.0 / i1) == Interval(-math.inf, math.inf)
+    assert (i1 / i2) == Interval(-math.inf, math.inf)
     assert (i2 / i3) == Interval(-4.0, 3.0)
     assert (i1 / i5) == Interval(-0.4, 0.2)
-    assert (i3 / i6) == Interval(-inf, -0.5)
-    assert (i5 / i7) == Interval(-inf, -5.0 / 3.0)
+    assert (i3 / i6) == Interval(-math.inf, -0.5)
+    assert (i5 / i7) == Interval(-math.inf, -5.0 / 3.0)
 
 
 def test_power(i1: Interval, i2: Interval, i5: Interval):
     assert (i1 ** 2) == Interval(0.0, 4.0)
     assert (i2 ** 3) == Interval(-64.0, 27.0)
     assert (i5 ** 0) == Interval(1.0, 1.0)
+
+
+def test_sin(i1: Interval, i2: Interval, i3: Interval, i6: Interval):
+    assert sin(i1) == Interval(math.sin(-1.0), 1.0)
+    assert sin(i2) == Interval(-1.0, 1.0)
+    assert sin(i3) == Interval(math.sin(1.0), 1.0)
+    assert sin(i6) == Interval(-1.0, 0.0)
+
+
+def test_cos(i1: Interval, i2: Interval, i3: Interval, i6: Interval):
+    assert cos(i1) == Interval(math.cos(2.0), 1.0)
+    assert cos(i2) == Interval(-1.0, 1.0)
+    assert cos(i3) == Interval(math.cos(2.0), math.cos(1.0))
+    assert cos(i6) == Interval(math.cos(-2.0), 1.0)
+
+
+def test_abs(i1: Interval, i2: Interval, i3: Interval, i4: Interval, i5: Interval, i6: Interval, i7: Interval):
+    assert abs(i1) == Interval(0.0, 2.0)
+    assert abs(i2) == Interval(0.0, 4.0)
+    assert abs(i3) == Interval(1.0, 2.0)
+    assert abs(i4) == Interval(5.0, 5.1)
+    assert abs(i5) == Interval(5.0, 6.0)
+    assert abs(i6) == Interval(0.0, 2.0)
+    assert abs(i7) == Interval(0.0, 3.0)
+
+
+def test_exp(i1: Interval, i2: Interval, i3: Interval):
+    assert exp(i1) == Interval(math.exp(-1.0), math.exp(2.0))
+    assert exp(i2) == Interval(math.exp(-4.0), math.exp(3.0))
+    assert exp(i3) == Interval(math.exp(1.0), math.exp(2.0))
+
+
+def test_sqrt(i1: Interval, i3: Interval, i5: Interval):
+    assert sqrt(i1) == Interval(0.0, math.sqrt(2.0))
+    assert sqrt(i3) == Interval(math.sqrt(1.0), math.sqrt(2.0))
+    with pytest.raises(IntervalExceptions.OperationIsNotDefined):
+        _ = sqrt(i5)
+
+
+def test_log(i1: Interval, i2: Interval, i3: Interval, i4: Interval, i5: Interval, i6: Interval, i7: Interval):
+    assert log(i1) == Interval(-math.inf, math.log(2.0))
+    assert log(i2) == Interval(-math.inf, math.log(3.0))
+    assert log(i3) == Interval(math.log(1.0), math.log(2.0))
+    assert log(i4) == Interval(math.log(5.0), math.log(5.1))
+    with pytest.raises(IntervalExceptions.OperationIsNotDefined):
+        _ = log(i5)
+    with pytest.raises(IntervalExceptions.OperationIsNotDefined):
+        _ = log(i6)
+    assert log(i7) == Interval(-math.inf, math.log(3.0))

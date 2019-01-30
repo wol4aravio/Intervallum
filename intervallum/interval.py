@@ -1,7 +1,7 @@
 from copy import copy
 from typing import Union, Callable, List, Tuple
 import functools
-from math import inf, isnan
+import math
 
 
 IntervalNumber = Union["Interval", float]
@@ -19,8 +19,13 @@ def monotonic(f: Callable[..., Tuple[Callable[[float], float], List[float]]]) ->
     @functools.wraps(f)
     def wrapper(*args, **kwargs):
         math_f, points = f(*args, **kwargs)
-        values = list(map(math_f, points))
-        return Interval(min(values), max(values))
+        min_, max_ = math.inf, -math.inf
+        for v in map(math_f, points):
+            if v < min_:
+                min_ = v
+            if v > max_:
+                max_ = v
+        return Interval(min_, max_)
     return wrapper
 
 
@@ -103,8 +108,8 @@ class Interval:
         else:
             distance: IntervalNumber = self << other
             if isinstance(distance, Interval):
-                distance.__lb = 0 if isnan(distance.__lb) else distance.__lb
-                distance.__ub = 0 if isnan(distance.__ub) else distance.__ub
+                distance.__lb = 0 if math.isnan(distance.__lb) else distance.__lb
+                distance.__ub = 0 if math.isnan(distance.__ub) else distance.__ub
                 distance = 0.5 * (abs(distance.__lb) + abs(distance.__ub))
             else:
                 distance = abs(distance)
@@ -151,11 +156,11 @@ class Interval:
         if self.__lb > 0 or self.__ub < 0:
             return Interval(1.0 / self.__ub, 1.0 / self.__lb)
         elif self.__lb == 0:
-            return Interval(1.0 / self.__ub, inf)
+            return Interval(1.0 / self.__ub, math.inf)
         elif self.__ub == 0.0:
-            return Interval(-inf, 1.0 / self.__lb)
+            return Interval(-math.inf, 1.0 / self.__lb)
         else:
-            return Interval(-inf, inf)
+            return Interval(-math.inf, math.inf)
 
     def __truediv__(self, other: IntervalNumber) -> IntervalNumber:
         if isinstance(other, Interval):
@@ -195,3 +200,7 @@ class IntervalExceptions:
     class WrongBoundsException(Exception):
         def __init__(self, received_lb: float, received_ub: float):
             super().__init__(f"Improper interval [{received_lb}; {received_ub}]")
+
+    class OperationIsNotDefined(Exception):
+        def __init__(self, operation: str, i: "Interval"):
+            super().__init__(f"Can not perform operation {operation}({i})")
