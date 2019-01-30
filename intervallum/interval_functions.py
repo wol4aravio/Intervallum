@@ -1,7 +1,7 @@
 from typing import Callable, List, Tuple
 import math
 
-from intervallum.interval import Interval
+from intervallum.interval import Interval, IntervalExceptions
 from intervallum.interval import reduce_result, monotonic
 
 
@@ -43,3 +43,15 @@ def abs(i: "Interval") -> Tuple[Callable[[float], float], List[float]]:
 @monotonic
 def exp(i: "Interval") -> Tuple[Callable[[float], float], List[float]]:
     return lambda x: math.exp(x), [i.lb, i.ub]
+
+
+@reduce_result
+@monotonic
+def sqrt(i: "Interval") -> Tuple[Callable[[float], float], List[float]]:
+    f = lambda x: math.sqrt(x)
+    if i.ub < 0.0:
+        raise IntervalExceptions.OperationIsNotDefined("sqrt", i)
+    elif i.lb < 0.0:
+        return f, [0.0, i.ub]
+    else:
+        return f, [i.lb, i.ub]

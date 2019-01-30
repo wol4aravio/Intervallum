@@ -4,7 +4,6 @@ import math
 import pytest
 from numpy.testing import assert_almost_equal
 
-from intervallum.interval import Interval, IntervalExceptions
 from intervallum.interval_functions import *
 
 
@@ -157,3 +156,9 @@ def test_exp(i1: Interval, i2: Interval, i3: Interval):
     assert exp(i2) == Interval(math.exp(-4.0), math.exp(3.0))
     assert exp(i3) == Interval(math.exp(1.0), math.exp(2.0))
 
+
+def test_sqrt(i1: Interval, i3: Interval, i5: Interval):
+    assert sqrt(i1) == Interval(0.0, math.sqrt(2.0))
+    assert sqrt(i3) == Interval(math.sqrt(1.0), math.sqrt(2.0))
+    with pytest.raises(IntervalExceptions.OperationIsNotDefined):
+        _ = sqrt(i5)
