@@ -150,3 +150,10 @@ def test_abs(i1: Interval, i2: Interval, i3: Interval, i4: Interval, i5: Interva
     assert abs(i5) == Interval(5.0, 6.0)
     assert abs(i6) == Interval(0.0, 2.0)
     assert abs(i7) == Interval(0.0, 3.0)
+
+
+def test_exp(i1: Interval, i2: Interval, i3: Interval):
+    assert exp(i1) == Interval(math.exp(-1.0), math.exp(2.0))
+    assert exp(i2) == Interval(math.exp(-4.0), math.exp(3.0))
+    assert exp(i3) == Interval(math.exp(1.0), math.exp(2.0))
+

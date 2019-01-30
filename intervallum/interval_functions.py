@@ -37,3 +37,9 @@ def abs(i: "Interval") -> Tuple[Callable[[float], float], List[float]]:
     if i.lb * i.ub < 0:
         points.append(0.0)
     return lambda x: math.fabs(x), points
+
+
+@reduce_result
+@monotonic
+def exp(i: "Interval") -> Tuple[Callable[[float], float], List[float]]:
+    return lambda x: math.exp(x), [i.lb, i.ub]
