@@ -1,5 +1,5 @@
 from copy import copy
-from typing import Union, Callable
+from typing import Union, Callable, List, Tuple
 import functools
 from math import inf, isnan
 
@@ -12,6 +12,15 @@ def reduce_result(f: Callable[..., "Interval"]) -> Callable[..., IntervalNumber]
     def wrapper(*args, **kwargs):
         i = f(*args, **kwargs)
         return i._try_to_reduce() if IntervalConstants._reduce_intervals_to_numbers else i
+    return wrapper
+
+
+def monotonic(f: Callable[..., Tuple[Callable[[float], float], List[float]]]) -> Callable[..., "Interval"]:
+    @functools.wraps(f)
+    def wrapper(*args, **kwargs):
+        math_f, points = f(*args, **kwargs)
+        values = list(map(math_f, points))
+        return Interval(min(values), max(values))
     return wrapper
 
 
@@ -156,6 +165,24 @@ class Interval:
 
     def __rtruediv__(self, other: IntervalNumber) -> IntervalNumber:
         return other * (~self)
+
+    @reduce_result
+    @monotonic
+    def _power_even(self, exponent: int) -> Tuple[Callable[[float], float], List[float]]:
+        points = [self.__lb, self.__ub]
+        if self.__lb * self.__ub < 0:
+            points.append(0.0)
+        return lambda x: x ** exponent, points
+
+    @reduce_result
+    def _power_odd(self, exponent: int) -> "Interval":
+        return Interval(self.__lb ** exponent, self.__ub ** exponent)
+
+    def __pow__(self, power: int, modulo=None) -> IntervalNumber:
+        if power % 2 == 0:
+            return self._power_even(power)
+        else:
+            return self._power_odd(power)
 
 
 class IntervalConstants:

@@ -119,3 +119,9 @@ def test_division(i1: Interval, i2: Interval, i3: Interval, i4: Interval, i5: In
     assert (i1 / i5) == Interval(-0.4, 0.2)
     assert (i3 / i6) == Interval(-inf, -0.5)
     assert (i5 / i7) == Interval(-inf, -5.0 / 3.0)
+
+
+def test_power(i1: Interval, i2: Interval, i5: Interval):
+    assert (i1 ** 2) == Interval(0.0, 4.0)
+    assert (i2 ** 3) == Interval(-64.0, 27.0)
+    assert (i5 ** 0) == Interval(1.0, 1.0)
