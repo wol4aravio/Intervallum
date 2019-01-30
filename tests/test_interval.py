@@ -162,3 +162,15 @@ def test_sqrt(i1: Interval, i3: Interval, i5: Interval):
     assert sqrt(i3) == Interval(math.sqrt(1.0), math.sqrt(2.0))
     with pytest.raises(IntervalExceptions.OperationIsNotDefined):
         _ = sqrt(i5)
+
+
+def test_log(i1: Interval, i2: Interval, i3: Interval, i4: Interval, i5: Interval, i6: Interval, i7: Interval):
+    assert log(i1) == Interval(-math.inf, math.log(2.0))
+    assert log(i2) == Interval(-math.inf, math.log(3.0))
+    assert log(i3) == Interval(math.log(1.0), math.log(2.0))
+    assert log(i4) == Interval(math.log(5.0), math.log(5.1))
+    with pytest.raises(IntervalExceptions.OperationIsNotDefined):
+        _ = log(i5)
+    with pytest.raises(IntervalExceptions.OperationIsNotDefined):
+        _ = log(i6)
+    assert log(i7) == Interval(-math.inf, math.log(3.0))

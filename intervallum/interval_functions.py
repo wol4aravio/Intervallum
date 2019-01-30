@@ -48,9 +48,21 @@ def exp(i: "Interval") -> Tuple[Callable[[float], float], List[float]]:
 @reduce_result
 @monotonic
 def sqrt(i: "Interval") -> Tuple[Callable[[float], float], List[float]]:
-    f = lambda x: math.sqrt(x)
+    def f(x): return math.sqrt(x)
     if i.ub < 0.0:
         raise IntervalExceptions.OperationIsNotDefined("sqrt", i)
+    elif i.lb < 0.0:
+        return f, [0.0, i.ub]
+    else:
+        return f, [i.lb, i.ub]
+
+
+@reduce_result
+@monotonic
+def log(i: "Interval") -> Tuple[Callable[[float], float], List[float]]:
+    def f(x): return math.log(x) if x != 0.0 else -math.inf
+    if i.ub <= 0.0:
+        raise IntervalExceptions.OperationIsNotDefined("log", i)
     elif i.lb < 0.0:
         return f, [0.0, i.ub]
     else:
