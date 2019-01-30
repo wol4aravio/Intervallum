@@ -1,7 +1,7 @@
 from copy import copy
 from typing import Union, Callable, List, Tuple
 import functools
-from math import inf, isnan
+import math
 
 
 IntervalNumber = Union["Interval", float]
@@ -19,7 +19,7 @@ def monotonic(f: Callable[..., Tuple[Callable[[float], float], List[float]]]) ->
     @functools.wraps(f)
     def wrapper(*args, **kwargs):
         math_f, points = f(*args, **kwargs)
-        min_, max_ = inf, -inf
+        min_, max_ = math.inf, -math.inf
         for v in map(math_f, points):
             if v < min_:
                 min_ = v
@@ -108,8 +108,8 @@ class Interval:
         else:
             distance: IntervalNumber = self << other
             if isinstance(distance, Interval):
-                distance.__lb = 0 if isnan(distance.__lb) else distance.__lb
-                distance.__ub = 0 if isnan(distance.__ub) else distance.__ub
+                distance.__lb = 0 if math.isnan(distance.__lb) else distance.__lb
+                distance.__ub = 0 if math.isnan(distance.__ub) else distance.__ub
                 distance = 0.5 * (abs(distance.__lb) + abs(distance.__ub))
             else:
                 distance = abs(distance)
@@ -156,11 +156,11 @@ class Interval:
         if self.__lb > 0 or self.__ub < 0:
             return Interval(1.0 / self.__ub, 1.0 / self.__lb)
         elif self.__lb == 0:
-            return Interval(1.0 / self.__ub, inf)
+            return Interval(1.0 / self.__ub, math.inf)
         elif self.__ub == 0.0:
-            return Interval(-inf, 1.0 / self.__lb)
+            return Interval(-math.inf, 1.0 / self.__lb)
         else:
-            return Interval(-inf, inf)
+            return Interval(-math.inf, math.inf)
 
     def __truediv__(self, other: IntervalNumber) -> IntervalNumber:
         if isinstance(other, Interval):
@@ -188,8 +188,6 @@ class Interval:
             return self._power_even(power)
         else:
             return self._power_odd(power)
-
-
 
 
 class IntervalConstants:

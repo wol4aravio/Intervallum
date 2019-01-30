@@ -1,10 +1,11 @@
 from copy import copy
-from math import inf
+import math
 
 import pytest
 from numpy.testing import assert_almost_equal
 
 from intervallum.interval import Interval, IntervalExceptions
+from intervallum.interval_functions import *
 
 
 @pytest.fixture(scope="session")
@@ -113,15 +114,22 @@ def test_multiplication(i1: Interval, i2: Interval, i3: Interval, i4: Interval, 
 
 def test_division(i1: Interval, i2: Interval, i3: Interval, i4: Interval, i5: Interval, i6: Interval, i7: Interval):
     assert (i1 / 2.0) == Interval(-0.5, 1.0)
-    assert (2.0 / i1) == Interval(-inf, inf)
-    assert (i1 / i2) == Interval(-inf, inf)
+    assert (2.0 / i1) == Interval(-math.inf, math.inf)
+    assert (i1 / i2) == Interval(-math.inf, math.inf)
     assert (i2 / i3) == Interval(-4.0, 3.0)
     assert (i1 / i5) == Interval(-0.4, 0.2)
-    assert (i3 / i6) == Interval(-inf, -0.5)
-    assert (i5 / i7) == Interval(-inf, -5.0 / 3.0)
+    assert (i3 / i6) == Interval(-math.inf, -0.5)
+    assert (i5 / i7) == Interval(-math.inf, -5.0 / 3.0)
 
 
 def test_power(i1: Interval, i2: Interval, i5: Interval):
     assert (i1 ** 2) == Interval(0.0, 4.0)
     assert (i2 ** 3) == Interval(-64.0, 27.0)
     assert (i5 ** 0) == Interval(1.0, 1.0)
+
+
+def test_sin(i1: Interval, i2: Interval, i3: Interval, i6: Interval):
+    assert sin(i1) == Interval(math.sin(-1.0), 1.0)
+    assert sin(i2) == Interval(-1.0, 1.0)
+    assert sin(i3) == Interval(math.sin(1.0), 1.0)
+    assert sin(i6) == Interval(-1.0, 0.0)
