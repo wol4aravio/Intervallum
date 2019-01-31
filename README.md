@@ -1,6 +1,6 @@
 # Intervallum
 
-[![Build Status](https://travis-ci.org/wol4aravio/Intervallum.svg?branch=master)](https://travis-ci.org/wol4aravio/Intervallum.svg?branch=master)
+[![Build Status](https://travis-ci.org/wol4aravio/Intervallum.svg?branch=master)](https://travis-ci.org/wol4aravio/Intervallum)
 
 [![PyPI version](https://badge.fury.io/py/intervallum.svg)](https://badge.fury.io/py/intervallum)
 
