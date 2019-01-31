@@ -204,3 +204,10 @@ def test_constrain(i1: Interval, i4: Interval, i7: Interval):
     assert i1.constrain(1.5, 3.0) == Interval(1.5, 2.0)
     assert i4.constrain(1.5, 3.0) == Interval(3.0, 3.0)
     assert i7.constrain(-10, 3.0) == i7
+
+
+def test_splitting(i1: Interval):
+    assert i1.bisect()[0] == Interval(-1.0, 0.5)
+    assert i1.bisect()[1] == Interval(0.5, 2.0)
+    assert i1.split([1.0, 2.0])[0] == Interval(-1.0, 0.0)
+    assert i1.split([1.0, 2.0])[1] == Interval(0.0, 2.0)
