@@ -105,7 +105,7 @@ class Interval:
     def __eq__(self, other: object) -> bool:
         if not (isinstance(other, float) or isinstance(other, Interval)):
             raise NotImplementedError()
-        
+
         distance: IntervalNumber = self << other
         if isinstance(distance, Interval):
             distance.__lb = 0 if math.isnan(distance.__lb) else distance.__lb
@@ -117,6 +117,30 @@ class Interval:
 
     def __ne__(self, other: object) -> bool:
         return not self.__eq__(other)
+
+    def __lt__(self, other: IntervalNumber) -> bool:
+        if isinstance(other, Interval):
+            return self.__lb < other.__lb
+        else:
+            return self.__lb < other
+
+    def __le__(self, other: IntervalNumber) -> bool:
+        if isinstance(other, Interval):
+            return self.__lb <= other.__lb
+        else:
+            return self.__lb <= other
+
+    def __gt__(self, other: IntervalNumber) -> bool:
+        if isinstance(other, Interval):
+            return self.__lb > other.__lb
+        else:
+            return self.__lb > other
+
+    def __ge__(self, other: IntervalNumber) -> bool:
+        if isinstance(other, Interval):
+            return self.__lb >= other.__lb
+        else:
+            return self.__lb >= other
 
     @reduce_result
     def __add__(self, other: IntervalNumber) -> "Interval":

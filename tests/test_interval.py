@@ -71,6 +71,30 @@ def test_equality(i1: Interval, i2: Interval):
         _ = i1 == "Interval"
 
 
+def test_lt(i1: Interval, i2: Interval, i6: Interval, i7: Interval):
+    assert i2 < i1
+    assert i2 < -1
+    assert i6 < i7
+
+
+def test_le(i1: Interval, i2: Interval):
+    assert i2 <= i1
+    assert i2 <= -1
+    assert i2 <= Interval(-4.0, 2.0)
+
+
+def test_gt(i1: Interval, i2: Interval, i6: Interval, i7: Interval):
+    assert i1 > i2
+    assert i1 > -4
+    assert i7 > i6
+
+
+def test_ge(i1: Interval, i2: Interval):
+    assert i1 >= i2
+    assert i1 >= -4
+    assert Interval(-4.0, 2.0) >= i2
+
+
 def test_middle(i2: Interval, i3: Interval):
     assert_almost_equal(i2.middle, -0.5)
     assert_almost_equal(i3.middle, 1.5)
