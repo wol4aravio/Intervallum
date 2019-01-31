@@ -71,6 +71,30 @@ def test_equality(i1: Interval, i2: Interval):
         _ = i1 == "Interval"
 
 
+def test_lt(i1: Interval, i2: Interval, i6: Interval, i7: Interval):
+    assert i2 < i1
+    assert i2 < -1
+    assert i6 < i7
+
+
+def test_le(i1: Interval, i2: Interval):
+    assert i2 <= i1
+    assert i2 <= -1
+    assert i2 <= Interval(-4.0, 2.0)
+
+
+def test_gt(i1: Interval, i2: Interval, i6: Interval, i7: Interval):
+    assert i1 > i2
+    assert i1 > -4
+    assert i7 > i6
+
+
+def test_ge(i1: Interval, i2: Interval):
+    assert i1 >= i2
+    assert i1 >= -4
+    assert Interval(-4.0, 2.0) >= i2
+
+
 def test_middle(i2: Interval, i3: Interval):
     assert_almost_equal(i2.middle, -0.5)
     assert_almost_equal(i3.middle, 1.5)
@@ -174,3 +198,16 @@ def test_log(i1: Interval, i2: Interval, i3: Interval, i4: Interval, i5: Interva
     with pytest.raises(IntervalExceptions.OperationIsNotDefined):
         _ = log(i6)
     assert log(i7) == Interval(-math.inf, math.log(3.0))
+
+
+def test_constrain(i1: Interval, i4: Interval, i7: Interval):
+    assert i1.constrain(1.5, 3.0) == Interval(1.5, 2.0)
+    assert i4.constrain(1.5, 3.0) == Interval(3.0, 3.0)
+    assert i7.constrain(-10, 3.0) == i7
+
+
+def test_splitting(i1: Interval):
+    assert i1.bisect()[0] == Interval(-1.0, 0.5)
+    assert i1.bisect()[1] == Interval(0.5, 2.0)
+    assert i1.split([1.0, 2.0])[0] == Interval(-1.0, 0.0)
+    assert i1.split([1.0, 2.0])[1] == Interval(0.0, 2.0)

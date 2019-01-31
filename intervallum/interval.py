@@ -1,5 +1,6 @@
 from copy import copy
 from typing import Union, Callable, List, Tuple
+from itertools import accumulate
 import functools
 import math
 
@@ -105,18 +106,42 @@ class Interval:
     def __eq__(self, other: object) -> bool:
         if not (isinstance(other, float) or isinstance(other, Interval)):
             raise NotImplementedError()
+
+        distance: IntervalNumber = self << other
+        if isinstance(distance, Interval):
+            distance.__lb = 0 if math.isnan(distance.__lb) else distance.__lb
+            distance.__ub = 0 if math.isnan(distance.__ub) else distance.__ub
+            distance = 0.5 * (abs(distance.__lb) + abs(distance.__ub))
         else:
-            distance: IntervalNumber = self << other
-            if isinstance(distance, Interval):
-                distance.__lb = 0 if math.isnan(distance.__lb) else distance.__lb
-                distance.__ub = 0 if math.isnan(distance.__ub) else distance.__ub
-                distance = 0.5 * (abs(distance.__lb) + abs(distance.__ub))
-            else:
-                distance = abs(distance)
-            return distance <= IntervalConstants._admissible_error
+            distance = abs(distance)
+        return distance <= IntervalConstants._admissible_error
 
     def __ne__(self, other: object) -> bool:
         return not self.__eq__(other)
+
+    def __lt__(self, other: IntervalNumber) -> bool:
+        if isinstance(other, Interval):
+            return self.__lb < other.__lb
+        else:
+            return self.__lb < other
+
+    def __le__(self, other: IntervalNumber) -> bool:
+        if isinstance(other, Interval):
+            return self.__lb <= other.__lb
+        else:
+            return self.__lb <= other
+
+    def __gt__(self, other: IntervalNumber) -> bool:
+        if isinstance(other, Interval):
+            return self.__lb > other.__lb
+        else:
+            return self.__lb > other
+
+    def __ge__(self, other: IntervalNumber) -> bool:
+        if isinstance(other, Interval):
+            return self.__lb >= other.__lb
+        else:
+            return self.__lb >= other
 
     @reduce_result
     def __add__(self, other: IntervalNumber) -> "Interval":
@@ -188,6 +213,30 @@ class Interval:
             return self._power_even(power)
         else:
             return self._power_odd(power)
+
+    @reduce_result
+    def constrain(self, min_: float, max_: float) -> "Interval":
+        def fix_point(p, min__, max__):
+            if p < min__:
+                return min__
+            elif p > max__:
+                return max__
+            return p
+        return Interval(fix_point(self.__lb, min_, max_), fix_point(self.__ub, min_, max_))
+
+    def split(self, ratios: List[float]) -> List[IntervalNumber]:
+        ratio_sum = sum(ratios)
+        w = self.width
+        intervals = []
+        cum_sums = list(accumulate([0.0] + ratios))
+        for r1, r2 in zip(cum_sums[:-1], cum_sums[1:]):
+            i = Interval(self.__lb + r1 * w / ratio_sum, self.__lb + r2 * w / ratio_sum)
+            intervals.append(i._try_to_reduce() if IntervalConstants._reduce_intervals_to_numbers else i)
+
+        return intervals
+
+    def bisect(self) -> List[IntervalNumber]:
+        return self.split([1.0, 1.0])
 
 
 class IntervalConstants:
