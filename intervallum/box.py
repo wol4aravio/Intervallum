@@ -76,8 +76,26 @@ class Box:
         return self * other
 
     @reduce_result
+    def __truediv__(self, other: float) -> "Box":
+        return self * (1.0 / other)
+
+    @reduce_result
     def __neg__(self):
         return self * (-1.0)
 
     # @reduce_result
     # def __add__(self, other: BoxVector) -> "Box":
+    #     dim = len(self)
+    #     if dim != len(other):
+    #         raise BoxExceptions.DifferentDimensionality(len(self), len(other))
+    #     return Box(*[self[i] + other[i] for i in range(dim)])
+    #
+    # @reduce_result
+    # def __radd__(self, other: BoxVector) -> "Box":
+    #     return self + other
+
+
+class BoxExceptions:
+    class DifferentDimensionality(Exception):
+        def __init__(self, dim_1: int, dim_2: int):
+            super().__init__(f"Input vectors have different dims: {dim_1} and {dim_2}")
