@@ -16,6 +16,11 @@ def b2() -> Box:
     return Box(Interval(1.0, 2.0), Interval(2.0, 4.0), Interval(5.0, 8.0))
 
 
+@pytest.fixture(scope="session")
+def b3() -> Box:
+    return Box(Interval(1.0, 2.0), Interval(2.0, 3.0), Interval(3.0, 3.5))
+
+
 def test_base(b1: Box):
     assert_almost_equal(b1[0], 1.0)
     assert b1[1] == Interval(2.0, 3.0)
@@ -29,3 +34,17 @@ def test_dim(b1: Box, b2: Box):
 def test_middle(b1: Box, b2: Box):
     assert_almost_equal(b1.middle, np.array([1, 2.5, 5.5, 9]))
     assert_almost_equal(b2.middle, np.array([1.5, 3.0, 6.5]))
+
+
+def test_width(b1: Box, b2: Box, b3: Box):
+    i1, w1 = b1.width
+    assert i1 == [2]
+    assert_almost_equal(w1, 3.0)
+
+    i2, w2 = b2.width
+    assert i2 == [2]
+    assert_almost_equal(w2, 3.0)
+
+    i3, w3 = b3.width
+    assert i3 == [0, 1]
+    assert_almost_equal(w3, 1.0)
