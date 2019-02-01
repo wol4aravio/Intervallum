@@ -48,8 +48,7 @@ class Box:
     def __ne__(self, other: object) -> bool:
         return not self.__eq__(other)
 
-    @property
-    def dim(self) -> int:
+    def __len__(self) -> int:
         return len(self.__components)
 
     @property
@@ -81,4 +80,4 @@ class Box:
         return self * (-1.0)
 
     # @reduce_result
-    # def __add__(self, other: BoxVector) -> :
+    # def __add__(self, other: BoxVector) -> "Box":

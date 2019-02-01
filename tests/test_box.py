@@ -39,8 +39,8 @@ def test_str_repr(b1: Box):
 
 
 def test_dim(b1: Box, b2: Box):
-    assert b1.dim == 4
-    assert b2.dim == 3
+    assert len(b1) == 4
+    assert len(b2) == 3
 
 
 def test_middle(b1: Box, b2: Box):
