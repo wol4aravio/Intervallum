@@ -69,13 +69,16 @@ class Box:
             return copy(self)
 
     @reduce_result
-    def __mul__(self, other: float) -> BoxVector:
+    def __mul__(self, other: float) -> "Box":
         return Box(*[v * other for v in self.__components])
 
     @reduce_result
-    def __rmul__(self, other: float) -> BoxVector:
+    def __rmul__(self, other: float) -> "Box":
         return self * other
 
     @reduce_result
     def __neg__(self):
         return self * (-1.0)
+
+    # @reduce_result
+    # def __add__(self, other: BoxVector) -> :
