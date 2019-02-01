@@ -1,3 +1,5 @@
+from copy import copy
+
 import pytest
 import numpy as np
 from numpy.testing import assert_almost_equal
@@ -48,3 +50,13 @@ def test_width(b1: Box, b2: Box, b3: Box):
     i3, w3 = b3.width
     assert i3 == [0, 1]
     assert_almost_equal(w3, 1.0)
+
+
+def test_eq(b1: Box, b2: Box):
+    assert b1 == copy(b1)
+    assert b1 != b2
+    with pytest.raises(NotImplementedError):
+        _ = b1 == "Box"
+
+# def test_try_to_reduce(b1: Box, b2: Box, b3: Box):
+#     assert

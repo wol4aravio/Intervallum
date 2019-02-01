@@ -1,3 +1,5 @@
+from copy import copy
+
 import numpy as np
 from typing import Union, List, Callable, Tuple
 import functools
@@ -26,6 +28,20 @@ class Box:
     def __getitem__(self, item: int) -> IntervalNumber:
         return self.__components[item]
 
+    def __copy__(self) -> "Box":
+        return Box(*[copy(v) for v in self.__components])
+
+    def __eq__(self, other: object) -> bool:
+        if not (isinstance(other, np.ndarray) or isinstance(other, Box)):
+            raise NotImplementedError()
+        for v1, v2 in zip(self.__components, other.__components if isinstance(other, Box) else other):
+            if v1 != v2:
+                return False
+        return True
+
+    def __ne__(self, other: object) -> bool:
+        return not self.__eq__(other)
+
     @property
     def dim(self) -> int:
         return len(self.__components)
@@ -40,9 +56,8 @@ class Box:
         max_width = max(widths)
         return [i for i, w in enumerate(widths) if w == max_width], max_width
 
-
     # def _try_to_reduce(self) -> BoxVector:
-    #     if (self.__ub - self.__lb) < IntervalConstants._reduction_width:
-    #         return 0.5 * (self.__lb + self.__ub)
+    #     if self.width == 0.0:
+    #         return self.middle
     #     else:
     #         return copy(self)
