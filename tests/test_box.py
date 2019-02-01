@@ -1,4 +1,5 @@
 import pytest
+import numpy as np
 from numpy.testing import assert_almost_equal
 
 from intervallum.interval import Interval
@@ -23,3 +24,8 @@ def test_base(b1: Box):
 def test_dim(b1: Box, b2: Box):
     assert b1.dim == 4
     assert b2.dim == 3
+
+
+def test_middle(b1: Box, b2: Box):
+    assert_almost_equal(b1.middle, np.array([1, 2.5, 5.5, 9]))
+    assert_almost_equal(b2.middle, np.array([1.5, 3.0, 6.5]))
