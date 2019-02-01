@@ -23,6 +23,11 @@ def b3() -> Box:
     return Box(Interval(1.0, 2.0), Interval(2.0, 3.0), Interval(3.0, 3.5))
 
 
+@pytest.fixture(scope="session")
+def b4() -> Box:
+    return Box(Interval(1.0, 1.0), Interval(2.0, 2.0), Interval(3.0, 3.0))
+
+
 def test_base(b1: Box):
     assert_almost_equal(b1[0], 1.0)
     assert b1[1] == Interval(2.0, 3.0)
@@ -63,5 +68,8 @@ def test_eq(b1: Box, b2: Box):
     with pytest.raises(NotImplementedError):
         _ = b1 == "Box"
 
-# def test_try_to_reduce(b1: Box, b2: Box, b3: Box):
-#     assert
+
+def test_try_to_reduce(b1: Box, b4: Box):
+    assert b1._try_to_reduce() == b1
+    assert not isinstance(b1._try_to_reduce(), np.ndarray)
+    assert isinstance(b4._try_to_reduce(), np.ndarray)

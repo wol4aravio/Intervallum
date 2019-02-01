@@ -1,7 +1,7 @@
 from copy import copy
 
 import numpy as np
-from typing import Union, List, Callable, Tuple
+from typing import Union, List, Callable, Tuple, NamedTuple
 import functools
 
 from intervallum.interval import Interval, IntervalNumber
@@ -62,8 +62,8 @@ class Box:
         max_width = max(widths)
         return [i for i, w in enumerate(widths) if w == max_width], max_width
 
-    # def _try_to_reduce(self) -> BoxVector:
-    #     if self.width == 0.0:
-    #         return self.middle
-    #     else:
-    #         return copy(self)
+    def _try_to_reduce(self) -> BoxVector:
+        if self.width[1] == 0.0:
+            return self.middle
+        else:
+            return copy(self)
