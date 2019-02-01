@@ -73,3 +73,10 @@ def test_try_to_reduce(b1: Box, b4: Box):
     assert b1._try_to_reduce() == b1
     assert not isinstance(b1._try_to_reduce(), np.ndarray)
     assert isinstance(b4._try_to_reduce(), np.ndarray)
+
+
+def test_multiply_by_scalar(b1: Box):
+    assert b1 * 2.0 == 2.0 * b1
+    assert b1 * 2.0 == Box(2.0, Interval(4.0, 6.0), Interval(8.0, 14.0), 18)
+    assert -b1 == Box(-1.0, Interval(-3.0, -2.0), Interval(-7.0, -4.0), -9)
+    assert isinstance(b1 * 1e-9, np.ndarray)

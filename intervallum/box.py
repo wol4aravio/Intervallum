@@ -10,12 +10,12 @@ from intervallum.interval import Interval, IntervalNumber
 BoxVector = Union["Box", np.ndarray]
 
 
-# def reduce_result(f: Callable[..., "Interval"]) -> Callable[..., IntervalNumber]:
-#     @functools.wraps(f)
-#     def wrapper(*args, **kwargs):
-#         i = f(*args, **kwargs)
-#         return i._try_to_reduce() if IntervalConstants._reduce_intervals_to_numbers else i
-#     return wrapper
+def reduce_result(f: Callable[..., "Box"]) -> Callable[..., BoxVector]:
+    @functools.wraps(f)
+    def wrapper(*args, **kwargs):
+        b = f(*args, **kwargs)
+        return b._try_to_reduce()
+    return wrapper
 
 
 class Box:
@@ -67,3 +67,15 @@ class Box:
             return self.middle
         else:
             return copy(self)
+
+    @reduce_result
+    def __mul__(self, other: float) -> BoxVector:
+        return Box(*[v * other for v in self.__components])
+
+    @reduce_result
+    def __rmul__(self, other: float) -> BoxVector:
+        return self * other
+
+    @reduce_result
+    def __neg__(self):
+        return self * (-1.0)
