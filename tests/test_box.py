@@ -28,6 +28,11 @@ def test_base(b1: Box):
     assert b1[1] == Interval(2.0, 3.0)
 
 
+def test_str_repr(b1: Box):
+    assert str(b1) == "1.0 x [2.0; 3.0] x [4.0; 7.0] x 9"
+    assert b1.__repr__() == "1.0 x [2.0; 3.0] x [4.0; 7.0] x 9"
+
+
 def test_dim(b1: Box, b2: Box):
     assert b1.dim == 4
     assert b2.dim == 3

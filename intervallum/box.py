@@ -25,6 +25,12 @@ class Box:
     def __init__(self, *args: IntervalNumber):
         self.__components = args
 
+    def __str__(self) -> str:
+        return " x ".join(v.__str__() for v in self.__components)
+
+    def __repr__(self) -> str:
+        return " x ".join(v.__repr__() for v in self.__components)
+
     def __getitem__(self, item: int) -> IntervalNumber:
         return self.__components[item]
 
