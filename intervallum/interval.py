@@ -1,13 +1,33 @@
 from copy import copy
 from typing import Union, Callable, List, Tuple
 from itertools import accumulate
+import functools
 import math
 
-from intervallum.interval_contants import IntervalConstants
-from intervallum.interval_exceptions import IntervalExceptions
-from intervallum.interval_functions import reduce_result, monotonic
 
 IntervalNumber = Union["Interval", float]
+
+
+def reduce_result(f: Callable[..., "Interval"]) -> Callable[..., IntervalNumber]:
+    @functools.wraps(f)
+    def wrapper(*args, **kwargs):
+        i = f(*args, **kwargs)
+        return i._try_to_reduce() if IntervalConstants._reduce_intervals_to_numbers else i
+    return wrapper
+
+
+def monotonic(f: Callable[..., Tuple[Callable[[float], float], List[float]]]) -> Callable[..., "Interval"]:
+    @functools.wraps(f)
+    def wrapper(*args, **kwargs):
+        math_f, points = f(*args, **kwargs)
+        min_, max_ = math.inf, -math.inf
+        for v in map(math_f, points):
+            if v < min_:
+                min_ = v
+            if v > max_:
+                max_ = v
+        return Interval(min_, max_)
+    return wrapper
 
 
 class Interval:
@@ -68,7 +88,7 @@ class Interval:
         return Interval(self.__lb, self.__ub)
 
     def _try_to_reduce(self) -> IntervalNumber:
-        if (self.__ub - self.__lb) < IntervalConstants.reduction_width:
+        if (self.__ub - self.__lb) < IntervalConstants._reduction_width:
             return 0.5 * (self.__lb + self.__ub)
         else:
             return copy(self)
@@ -94,7 +114,7 @@ class Interval:
             distance = 0.5 * (abs(distance.__lb) + abs(distance.__ub))
         else:
             distance = abs(distance)
-        return distance <= IntervalConstants.admissible_error
+        return distance <= IntervalConstants._admissible_error
 
     def __ne__(self, other: object) -> bool:
         return not self.__eq__(other)
@@ -211,9 +231,26 @@ class Interval:
         cum_sums = list(accumulate([0.0] + ratios))
         for r1, r2 in zip(cum_sums[:-1], cum_sums[1:]):
             i = Interval(self.__lb + r1 * w / ratio_sum, self.__lb + r2 * w / ratio_sum)
-            intervals.append(i._try_to_reduce() if IntervalConstants.reduce_intervals_to_numbers else i)
+            intervals.append(i._try_to_reduce() if IntervalConstants._reduce_intervals_to_numbers else i)
 
         return intervals
 
     def bisect(self) -> List[IntervalNumber]:
         return self.split([1.0, 1.0])
+
+
+class IntervalConstants:
+    _reduce_intervals_to_numbers: bool = True
+    _reduction_width: float = 1e-5
+    _admissible_error: float = 1e-7
+
+
+class IntervalExceptions:
+    class WrongBoundsException(Exception):
+        def __init__(self, received_lb: float, received_ub: float):
+            super().__init__(f"Improper interval [{received_lb}; {received_ub}]")
+
+    class OperationIsNotDefined(Exception):
+        def __init__(self, operation: str, i: "Interval"):
+            super().__init__(f"Can not perform operation {operation}({i})")
+

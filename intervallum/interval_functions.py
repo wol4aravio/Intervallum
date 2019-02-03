@@ -1,10 +1,8 @@
-import functools
 from typing import Callable, List, Tuple
 import math
 
-from intervallum.interval import Interval, IntervalNumber
-from intervallum.interval_exceptions import IntervalExceptions
-from intervallum.interval_contants import IntervalConstants
+from intervallum.interval import Interval, IntervalNumber, IntervalExceptions
+from intervallum.interval import reduce_result, monotonic
 
 
 def _get_points_for_trig(left: float, right: float) -> List[float]:
@@ -12,28 +10,6 @@ def _get_points_for_trig(left: float, right: float) -> List[float]:
     left_bound = int(math.ceil(left / c))
     right_bound = int(math.floor(right / c))
     return [left, right] + list(map(lambda v: c * v, range(left_bound, right_bound + 1)))
-
-
-def reduce_result(f: Callable[..., "Interval"]) -> Callable[..., IntervalNumber]:
-    @functools.wraps(f)
-    def wrapper(*args, **kwargs):
-        i = f(*args, **kwargs)
-        return i._try_to_reduce() if IntervalConstants.reduce_intervals_to_numbers else i
-    return wrapper
-
-
-def monotonic(f: Callable[..., Tuple[Callable[[float], float], List[float]]]) -> Callable[..., "Interval"]:
-    @functools.wraps(f)
-    def wrapper(*args, **kwargs):
-        math_f, points = f(*args, **kwargs)
-        min_, max_ = math.inf, -math.inf
-        for v in map(math_f, points):
-            if v < min_:
-                min_ = v
-            if v > max_:
-                max_ = v
-        return Interval(min_, max_)
-    return wrapper
 
 
 @reduce_result
