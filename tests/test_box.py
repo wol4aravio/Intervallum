@@ -71,8 +71,8 @@ def test_eq(b1: Box, b2: Box):
 
 def test_try_to_reduce(b1: Box, b4: Box):
     assert b1._try_to_reduce() == b1
-    assert b1._try_to_reduce().dtype != float
-    assert b4._try_to_reduce().dtype == float
+    assert not isinstance(b1._try_to_reduce(), np.ndarray)
+    assert isinstance(b4._try_to_reduce(), np.ndarray)
 
 
 def test_multiply_by_scalar(b1: Box):
@@ -81,14 +81,3 @@ def test_multiply_by_scalar(b1: Box):
     assert b1 * 2.0 == Box(2.0, Interval(4.0, 6.0), Interval(8.0, 14.0), 18)
     assert -b1 == Box(-1.0, Interval(-3.0, -2.0), Interval(-7.0, -4.0), -9)
     assert isinstance(b1 * 1e-9, np.ndarray)
-
-
-def test_addition(b1: Box, b2: Box, b3: Box):
-    with pytest.raises(ValueError):
-        _ = b1 + b2
-    assert b3 + np.array([1, 1, 1]) == Box(Interval(2.0, 3.0), Interval(3.0, 4.0), Interval(4.0, 4.5))
-    assert np.array([1, 1, 1]) + b3 == b3 + np.array([1, 1, 1])
-    assert b3 - np.array([1, 1, 1]) == Box(Interval(0.0, 1.0), Interval(1.0, 2.0), Interval(2.0, 2.5))
-    assert np.array([1, 1, 1]) - b3 == Box(Interval(-1.0, 0.0), Interval(-2.0, -1.0), Interval(-2.5, -2.0))
-    assert b2 - b2 != Box(0.0, 0.0, 0.0)
-    assert b2 * 2.0 == b2 + b2
