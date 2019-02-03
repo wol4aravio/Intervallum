@@ -8,7 +8,7 @@ import math
 IntervalNumber = Union["Interval", float]
 
 
-def try_to_reduce(i: "Interval") -> IntervalNumber:
+def _try_to_reduce(i: "Interval") -> IntervalNumber:
     if (i.ub - i.lb) < IntervalConstants._reduction_width:
         return 0.5 * (i.lb + i.ub)
     else:
@@ -19,7 +19,7 @@ def reduce_result(f: Callable[..., "Interval"]) -> Callable[..., IntervalNumber]
     @functools.wraps(f)
     def wrapper(*args, **kwargs):
         i = f(*args, **kwargs)
-        return try_to_reduce(i) if IntervalConstants._reduce_intervals_to_numbers else i
+        return _try_to_reduce(i) if IntervalConstants._reduce_intervals_to_numbers else i
     return wrapper
 
 
@@ -232,7 +232,7 @@ class Interval:
         cum_sums = list(accumulate([0.0] + ratios))
         for r1, r2 in zip(cum_sums[:-1], cum_sums[1:]):
             i = Interval(self.__lb + r1 * w / ratio_sum, self.__lb + r2 * w / ratio_sum)
-            intervals.append(try_to_reduce(i) if IntervalConstants._reduce_intervals_to_numbers else i)
+            intervals.append(_try_to_reduce(i) if IntervalConstants._reduce_intervals_to_numbers else i)
 
         return intervals
 

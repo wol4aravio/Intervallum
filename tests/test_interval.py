@@ -3,7 +3,7 @@ from copy import copy
 import pytest
 from numpy.testing import assert_almost_equal
 
-from intervallum.interval import try_to_reduce
+from intervallum.interval import _try_to_reduce
 from intervallum.interval_functions import *
 
 
@@ -106,9 +106,9 @@ def test_width(i7: Interval, i4: Interval):
 
 
 def test_reduction(i4: Interval):
-    assert i4 == try_to_reduce(i4)
+    assert i4 == _try_to_reduce(i4)
     i = Interval(1.0, 1.0 + 1e-7)
-    assert try_to_reduce(i) == Interval.from_point(i.middle)
+    assert _try_to_reduce(i) == Interval.from_point(i.middle)
 
 
 def test_addition(i1: Interval, i2: Interval, i3: Interval, i4: Interval, i5: Interval):
