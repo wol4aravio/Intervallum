@@ -217,7 +217,8 @@ def test_constrain(i1: Interval, i4: Interval, i7: Interval):
 
 
 def test_splitting(i1: Interval):
-    assert i1.bisect()[0] == Interval(-1.0, 0.5)
-    assert i1.bisect()[1] == Interval(0.5, 2.0)
-    assert i1.split([1.0, 2.0])[0] == Interval(-1.0, 0.0)
-    assert i1.split([1.0, 2.0])[1] == Interval(0.0, 2.0)
+    assert bisect(1.0) == [1.0, 1.0]
+    assert bisect(i1)[0] == Interval(-1.0, 0.5)
+    assert bisect(i1)[1] == Interval(0.5, 2.0)
+    assert split(i1, [1.0, 2.0])[0] == Interval(-1.0, 0.0)
+    assert split(i1, [1.0, 2.0])[1] == Interval(0.0, 2.0)

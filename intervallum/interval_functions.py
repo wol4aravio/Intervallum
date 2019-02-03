@@ -1,7 +1,8 @@
 from typing import Callable, List, Tuple
 import math
+from itertools import accumulate
 
-from intervallum.interval import Interval, IntervalNumber, IntervalExceptions
+from intervallum.interval import Interval, IntervalNumber, IntervalExceptions, IntervalConstants
 from intervallum.interval import reduce_result, monotonic
 
 
@@ -80,3 +81,21 @@ def log(i: IntervalNumber) -> Tuple[Callable[[float], float], List[float]]:
         return f, [0.0, i.ub]
     else:
         return f, [i.lb, i.ub]
+
+
+def split(i: IntervalNumber, ratios: List[float]) -> List[IntervalNumber]:
+    if isinstance(i, Interval):
+        ratio_sum = sum(ratios)
+        w = i.width
+        intervals = []
+        cum_sums = list(accumulate([0.0] + ratios))
+        for r1, r2 in zip(cum_sums[:-1], cum_sums[1:]):
+            i = Interval(i.lb + r1 * w / ratio_sum, i.lb + r2 * w / ratio_sum)
+            intervals.append(i._try_to_reduce() if IntervalConstants._reduce_intervals_to_numbers else i)
+        return intervals
+    else:
+        return [i] * len(ratios)
+
+
+def bisect(i: IntervalNumber) -> List[IntervalNumber]:
+    return split(i, [1.0, 1.0])

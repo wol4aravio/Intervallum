@@ -1,6 +1,5 @@
 from copy import copy
 from typing import Union, Callable, List, Tuple
-from itertools import accumulate
 import functools
 import math
 
@@ -223,20 +222,6 @@ class Interval:
                 return max__
             return p
         return Interval(fix_point(self.__lb, min_, max_), fix_point(self.__ub, min_, max_))
-
-    def split(self, ratios: List[float]) -> List[IntervalNumber]:
-        ratio_sum = sum(ratios)
-        w = self.width
-        intervals = []
-        cum_sums = list(accumulate([0.0] + ratios))
-        for r1, r2 in zip(cum_sums[:-1], cum_sums[1:]):
-            i = Interval(self.__lb + r1 * w / ratio_sum, self.__lb + r2 * w / ratio_sum)
-            intervals.append(i._try_to_reduce() if IntervalConstants._reduce_intervals_to_numbers else i)
-
-        return intervals
-
-    def bisect(self) -> List[IntervalNumber]:
-        return self.split([1.0, 1.0])
 
 
 class IntervalConstants:
