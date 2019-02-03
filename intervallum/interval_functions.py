@@ -2,7 +2,9 @@ import functools
 from typing import Callable, List, Tuple
 import math
 
-from intervallum.interval import Interval, IntervalNumber, IntervalExceptions, IntervalConstants
+from intervallum.interval import Interval, IntervalNumber
+from intervallum.interval_exceptions import IntervalExceptions
+from intervallum.interval_contants import IntervalConstants
 
 
 def _get_points_for_trig(left: float, right: float) -> List[float]:
@@ -16,7 +18,7 @@ def reduce_result(f: Callable[..., "Interval"]) -> Callable[..., IntervalNumber]
     @functools.wraps(f)
     def wrapper(*args, **kwargs):
         i = f(*args, **kwargs)
-        return i._try_to_reduce() if IntervalConstants._reduce_intervals_to_numbers else i
+        return i._try_to_reduce() if IntervalConstants.reduce_intervals_to_numbers else i
     return wrapper
 
 
