@@ -1,33 +1,11 @@
 from copy import copy
 from typing import Union, Callable, List, Tuple
 from itertools import accumulate
-import functools
 import math
 
+from intervallum.interval_functions import reduce_result, monotonic
 
 IntervalNumber = Union["Interval", float]
-
-
-def reduce_result(f: Callable[..., "Interval"]) -> Callable[..., IntervalNumber]:
-    @functools.wraps(f)
-    def wrapper(*args, **kwargs):
-        i = f(*args, **kwargs)
-        return i._try_to_reduce() if IntervalConstants._reduce_intervals_to_numbers else i
-    return wrapper
-
-
-def monotonic(f: Callable[..., Tuple[Callable[[float], float], List[float]]]) -> Callable[..., "Interval"]:
-    @functools.wraps(f)
-    def wrapper(*args, **kwargs):
-        math_f, points = f(*args, **kwargs)
-        min_, max_ = math.inf, -math.inf
-        for v in map(math_f, points):
-            if v < min_:
-                min_ = v
-            if v > max_:
-                max_ = v
-        return Interval(min_, max_)
-    return wrapper
 
 
 class Interval:
