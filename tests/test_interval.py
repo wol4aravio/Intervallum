@@ -1,5 +1,4 @@
 from copy import copy
-import math
 
 import pytest
 from numpy.testing import assert_almost_equal
@@ -152,6 +151,8 @@ def test_power(i1: Interval, i2: Interval, i5: Interval):
 
 
 def test_sin(i1: Interval, i2: Interval, i3: Interval, i6: Interval):
+    for i in [i1, i2, i3, i6]:
+        assert_almost_equal(math.sin(i.lb), sin(i.lb))
     assert sin(i1) == Interval(math.sin(-1.0), 1.0)
     assert sin(i2) == Interval(-1.0, 1.0)
     assert sin(i3) == Interval(math.sin(1.0), 1.0)
@@ -159,6 +160,8 @@ def test_sin(i1: Interval, i2: Interval, i3: Interval, i6: Interval):
 
 
 def test_cos(i1: Interval, i2: Interval, i3: Interval, i6: Interval):
+    for i in [i1, i2, i3, i6]:
+        assert_almost_equal(math.cos(i.lb), cos(i.lb))
     assert cos(i1) == Interval(math.cos(2.0), 1.0)
     assert cos(i2) == Interval(-1.0, 1.0)
     assert cos(i3) == Interval(math.cos(2.0), math.cos(1.0))
@@ -166,6 +169,8 @@ def test_cos(i1: Interval, i2: Interval, i3: Interval, i6: Interval):
 
 
 def test_abs(i1: Interval, i2: Interval, i3: Interval, i4: Interval, i5: Interval, i6: Interval, i7: Interval):
+    for i in [i1, i2, i3, i4, i5, i6, i7]:
+        assert_almost_equal(math.fabs(i.lb), abs(i.lb))
     assert abs(i1) == Interval(0.0, 2.0)
     assert abs(i2) == Interval(0.0, 4.0)
     assert abs(i3) == Interval(1.0, 2.0)
@@ -176,12 +181,15 @@ def test_abs(i1: Interval, i2: Interval, i3: Interval, i4: Interval, i5: Interva
 
 
 def test_exp(i1: Interval, i2: Interval, i3: Interval):
+    for i in [i1, i2, i3]:
+        assert_almost_equal(math.exp(i.lb), exp(i.lb))
     assert exp(i1) == Interval(math.exp(-1.0), math.exp(2.0))
     assert exp(i2) == Interval(math.exp(-4.0), math.exp(3.0))
     assert exp(i3) == Interval(math.exp(1.0), math.exp(2.0))
 
 
 def test_sqrt(i1: Interval, i3: Interval, i5: Interval):
+    assert_almost_equal(math.sqrt(i3.lb), sqrt(i3.lb))
     assert sqrt(i1) == Interval(0.0, math.sqrt(2.0))
     assert sqrt(i3) == Interval(math.sqrt(1.0), math.sqrt(2.0))
     with pytest.raises(IntervalExceptions.OperationIsNotDefined):
@@ -189,6 +197,8 @@ def test_sqrt(i1: Interval, i3: Interval, i5: Interval):
 
 
 def test_log(i1: Interval, i2: Interval, i3: Interval, i4: Interval, i5: Interval, i6: Interval, i7: Interval):
+    for i in [i3, i4]:
+        assert_almost_equal(math.log(i.lb), log(i.lb))
     assert log(i1) == Interval(-math.inf, math.log(2.0))
     assert log(i2) == Interval(-math.inf, math.log(3.0))
     assert log(i3) == Interval(math.log(1.0), math.log(2.0))
@@ -207,7 +217,8 @@ def test_constrain(i1: Interval, i4: Interval, i7: Interval):
 
 
 def test_splitting(i1: Interval):
-    assert i1.bisect()[0] == Interval(-1.0, 0.5)
-    assert i1.bisect()[1] == Interval(0.5, 2.0)
-    assert i1.split([1.0, 2.0])[0] == Interval(-1.0, 0.0)
-    assert i1.split([1.0, 2.0])[1] == Interval(0.0, 2.0)
+    assert bisect(1.0) == [1.0, 1.0]
+    assert bisect(i1)[0] == Interval(-1.0, 0.5)
+    assert bisect(i1)[1] == Interval(0.5, 2.0)
+    assert split(i1, [1.0, 2.0])[0] == Interval(-1.0, 0.0)
+    assert split(i1, [1.0, 2.0])[1] == Interval(0.0, 2.0)
