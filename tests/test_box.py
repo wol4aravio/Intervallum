@@ -6,6 +6,7 @@ from numpy.testing import assert_almost_equal
 
 from intervallum.interval import Interval
 from intervallum.box import Box
+from intervallum.box_functions import split, bisect
 
 
 @pytest.fixture(scope="session")
@@ -92,3 +93,10 @@ def test_addition(b1: Box, b2: Box, b3: Box):
     assert np.array([1, 1, 1]) - b3 == Box(Interval(-1.0, 0.0), Interval(-2.0, -1.0), Interval(-2.5, -2.0))
     assert b2 - b2 != Box(0.0, 0.0, 0.0)
     assert b2 * 2.0 == b2 + b2
+
+
+def test_split(b1: Box):
+    assert bisect(b1, 0)[0] == b1
+    assert bisect(b1, 0)[1] == b1
+    assert bisect(b1)[0] == Box(1.0, Interval(2.0, 3.0), Interval(4.0, 5.5), 9)
+    assert bisect(b1)[1] == Box(1.0, Interval(2.0, 3.0), Interval(5.5, 7.0), 9)
