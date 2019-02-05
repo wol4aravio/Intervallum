@@ -1,10 +1,12 @@
 from copy import copy
 
 import numpy as np
-from typing import Union, List, Callable, Tuple, NamedTuple
-import functools
+from typing import Union, List, Tuple
+from itertools import accumulate
+import random
 
 from intervallum.interval import Interval, IntervalNumber
+from intervallum.interval_functions import split
 
 
 BoxVector = Union["Box", np.ndarray]
@@ -29,6 +31,9 @@ class Box(np.ndarray):
 
     def __ne__(self, other: object) -> bool:
         return not self.__eq__(other)
+
+    def __copy__(self) -> "Box":
+        return Box(*[copy(i) for i in self])
 
     @property
     def middle(self) -> np.ndarray:
