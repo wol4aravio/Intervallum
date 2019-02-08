@@ -99,3 +99,12 @@ def split(i: IntervalNumber, ratios: List[float]) -> List[IntervalNumber]:
 
 def bisect(i: IntervalNumber) -> List[IntervalNumber]:
     return split(i, [1.0, 1.0])
+
+
+def shrink(i: IntervalNumber, alpha: float) -> IntervalNumber:
+    if isinstance(i, Interval):
+        m = i.middle
+        r = 0.5 * alpha * i.width
+        return Interval(m - r, m + r)
+    else:
+        return i
