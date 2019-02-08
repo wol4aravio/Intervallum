@@ -104,5 +104,6 @@ def test_split(b1: Box):
 
 def test_shrink(b1: Box):
     assert shrink(b1, alpha=0.5) == Box(1.0, Interval(2.25, 2.75), Interval(4.75, 6.25), 9.0)
+    assert np.all(shrink(b1.middle, alpha=0.0) == b1.middle)
     assert np.all(shrink(b1, alpha=0.0) == b1.middle)
     assert shrink(b1, alpha=0.5, shrink_components=[0, 3]) == b1
