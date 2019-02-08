@@ -6,7 +6,7 @@ from numpy.testing import assert_almost_equal
 
 from intervallum.interval import Interval
 from intervallum.box import Box
-from intervallum.box_functions import bisect, shrink
+from intervallum.box_functions import bisect, shrink, constrain
 
 
 @pytest.fixture(scope="session")
@@ -100,6 +100,10 @@ def test_split(b1: Box):
     assert bisect(b1, 0)[1] == b1
     assert bisect(b1)[0] == Box(1.0, Interval(2.0, 3.0), Interval(4.0, 5.5), 9)
     assert bisect(b1)[1] == Box(1.0, Interval(2.0, 3.0), Interval(5.5, 7.0), 9)
+
+
+def test_constrain(b3: Box):
+    assert constrain(b3, area=[(3.0, 4.0), (2.1, 2.9), (0.0, 1.0)]) == Box(3.0, Interval(2.1, 2.9), 1.0)
 
 
 def test_shrink(b1: Box):
