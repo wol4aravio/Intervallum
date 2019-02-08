@@ -2,12 +2,8 @@ from copy import copy
 
 import numpy as np
 from typing import Union, List, Tuple
-from itertools import accumulate
-import random
 
-from intervallum.interval import Interval, IntervalNumber
-from intervallum.interval_functions import split
-
+from intervallum.interval import Interval
 
 BoxVector = Union["Box", np.ndarray]
 

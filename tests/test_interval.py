@@ -222,3 +222,9 @@ def test_splitting(i1: Interval):
     assert bisect(i1)[1] == Interval(0.5, 2.0)
     assert split(i1, [1.0, 2.0])[0] == Interval(-1.0, 0.0)
     assert split(i1, [1.0, 2.0])[1] == Interval(0.0, 2.0)
+
+
+def test_shrinking(i1: Interval, i3: Interval):
+    assert shrink(17.0, alpha=0.2) == 17.0
+    assert shrink(i1, alpha=0.5) == Interval(-0.25, 1.25)
+    assert shrink(i3, 0.1) == Interval(1.45, 1.55)
