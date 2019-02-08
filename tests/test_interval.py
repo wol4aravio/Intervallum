@@ -211,9 +211,11 @@ def test_log(i1: Interval, i2: Interval, i3: Interval, i4: Interval, i5: Interva
 
 
 def test_constrain(i1: Interval, i4: Interval, i7: Interval):
-    assert i1.constrain(1.5, 3.0) == Interval(1.5, 2.0)
-    assert i4.constrain(1.5, 3.0) == Interval(3.0, 3.0)
-    assert i7.constrain(-10, 3.0) == i7
+    assert constrain(i1, 1.5, 3.0) == Interval(1.5, 2.0)
+    assert constrain(i4, 1.5, 3.0) == Interval(3.0, 3.0)
+    assert constrain(i7, -10, 3.0) == i7
+    assert constrain(5.0, -10, 3.0) == 3.0
+    assert constrain(-105.0, -10, 3.0) == -10.0
 
 
 def test_splitting(i1: Interval):

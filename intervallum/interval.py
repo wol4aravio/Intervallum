@@ -213,16 +213,6 @@ class Interval:
         else:
             return self._power_odd(power)
 
-    @reduce_result
-    def constrain(self, min_: float, max_: float) -> "Interval":
-        def fix_point(p, min__, max__):
-            if p < min__:
-                return min__
-            elif p > max__:
-                return max__
-            return p
-        return Interval(fix_point(self.__lb, min_, max_), fix_point(self.__ub, min_, max_))
-
 
 class IntervalConstants:
     _reduce_intervals_to_numbers: bool = True

@@ -101,6 +101,19 @@ def bisect(i: IntervalNumber) -> List[IntervalNumber]:
     return split(i, [1.0, 1.0])
 
 
+def constrain(i: IntervalNumber, min_: float, max_: float) -> IntervalNumber:
+    def fix_point(p: float, min__: float, max__: float) -> float:
+        if p < min__:
+            return min__
+        elif p > max__:
+            return max__
+        return p
+    if isinstance(i, Interval):
+        return Interval(fix_point(i.lb, min_, max_), fix_point(i.ub, min_, max_))
+    else:
+        return fix_point(i, min_, max_)
+
+
 def shrink(i: IntervalNumber, alpha: float) -> IntervalNumber:
     if isinstance(i, Interval):
         m = i.middle
