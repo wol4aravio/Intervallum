@@ -5,6 +5,7 @@ import random
 
 from intervallum.box import Box, BoxVector
 from intervallum.interval_functions import split as i_split
+from intervallum.interval_functions import shrink as i_shrink
 
 
 def split(b: BoxVector, ratios: List[float], split_id: int = None) -> List[BoxVector]:
@@ -24,3 +25,13 @@ def split(b: BoxVector, ratios: List[float], split_id: int = None) -> List[BoxVe
 
 def bisect(b: BoxVector, split_id: int = None) -> List[BoxVector]:
     return split(b, [1.0, 1.0], split_id)
+
+
+def shrink(b: BoxVector, alpha: float, shrink_components: List[int] = None) -> BoxVector:
+    new_components = list()
+    for id_, c in enumerate(b):
+        if (shrink_components is None) or (id_ in shrink_components):
+            new_components.append(i_shrink(c, alpha))
+        else:
+            new_components.append(copy(c))
+    return Box(*new_components)._try_to_reduce()
