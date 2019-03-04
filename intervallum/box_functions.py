@@ -10,6 +10,11 @@ from intervallum.interval_functions import constrain as i_constrain
 
 
 def split(b: BoxVector, ratios: List[float], split_id: int = None) -> Tuple[int, List[BoxVector]]:
+    if not isinstance(b, Box):
+        copies = []
+        for _ in range(len(ratios)):
+            copies.append(b.copy())
+        return random.choice(range(len(b))), copies
     if split_id is None:
         ids, w = b.width
         id_ = random.choice(ids)
