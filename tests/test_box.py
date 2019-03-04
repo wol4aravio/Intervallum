@@ -101,10 +101,12 @@ def test_addition(b1: Box, b2: Box, b3: Box):
 
 
 def test_split(b1: Box):
-    assert bisect(b1, 0)[0] == b1
-    assert bisect(b1, 0)[1] == b1
-    assert bisect(b1)[0] == Box(1.0, Interval(2.0, 3.0), Interval(4.0, 5.5), 9)
-    assert bisect(b1)[1] == Box(1.0, Interval(2.0, 3.0), Interval(5.5, 7.0), 9)
+    assert bisect(b1, 0)[0] == 0
+    assert bisect(b1)[0] == 2
+    assert bisect(b1, 0)[1][0] == b1
+    assert bisect(b1, 0)[1][1] == b1
+    assert bisect(b1)[1][0] == Box(1.0, Interval(2.0, 3.0), Interval(4.0, 5.5), 9)
+    assert bisect(b1)[1][1] == Box(1.0, Interval(2.0, 3.0), Interval(5.5, 7.0), 9)
 
 
 def test_constrain(b3: Box):
