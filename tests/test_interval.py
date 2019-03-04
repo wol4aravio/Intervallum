@@ -230,3 +230,10 @@ def test_shrinking(i1: Interval, i3: Interval):
     assert shrink(17.0, alpha=0.2) == 17.0
     assert shrink(i1, alpha=0.5) == Interval(-0.25, 1.25)
     assert shrink(i3, 0.1) == Interval(1.45, 1.55)
+
+
+def test_hausdorff(i1: Interval):
+    assert_almost_equal(hausdorff_distance(i1, i1), 0.0)
+    assert_almost_equal(hausdorff_distance(i1, 0.0), 2.0)
+    assert_almost_equal(hausdorff_distance(0.0, i1), 2.0)
+    assert_almost_equal(hausdorff_distance(i1, 3.0), 4.0)

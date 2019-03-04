@@ -1,3 +1,4 @@
+from copy import copy
 from typing import Callable, List, Tuple
 import math
 from itertools import accumulate
@@ -121,3 +122,20 @@ def shrink(i: IntervalNumber, alpha: float) -> IntervalNumber:
         return Interval(m - r, m + r)
     else:
         return i
+
+
+def _hausdorff_distance_part(i1: IntervalNumber, i2: IntervalNumber) -> float:
+    i1_ = i1 if isinstance(i1, Interval) else Interval(i1, i1)
+    i2_ = i2 if isinstance(i2, Interval) else Interval(i2, i2)
+    d1 = i2_.lb - i1_.lb
+    if d1 < 0:
+        d1 = 0.0
+    d2 = i1_.ub - i2_.ub
+    if d2 < 0:
+        d2 = 0.0
+    return max(d1, d2)
+
+
+def hausdorff_distance(i1: IntervalNumber, i2: IntervalNumber) -> float:
+    return max(_hausdorff_distance_part(i1, i2), _hausdorff_distance_part(i2, i1))
+
