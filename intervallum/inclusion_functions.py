@@ -6,7 +6,7 @@ from intervallum.box import Box
 from intervallum.interval import Interval
 
 
-class RS_subinclusion_function:
+class RS_SubinclusionFunction:
 
     def __init__(self, f: Callable[[Union[np.ndarray, List[float]]], Union[np.ndarray, float]], number_of_samples: int):
         self._number_of_samples = number_of_samples
