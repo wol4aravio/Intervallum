@@ -44,6 +44,11 @@ def test_dim(b1: Box, b2: Box):
     assert len(b2) == 3
 
 
+def test_lb_ub(b1: Box):
+    assert_almost_equal(b1.lb, np.array([1, 2, 4, 9]))
+    assert_almost_equal(b1.ub, np.array([1, 3, 7, 9]))
+
+
 def test_middle(b1: Box, b2: Box):
     assert_almost_equal(b1.middle, np.array([1, 2.5, 5.5, 9]))
     assert_almost_equal(b2.middle, np.array([1.5, 3.0, 6.5]))
