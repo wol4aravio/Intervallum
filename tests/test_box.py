@@ -101,6 +101,8 @@ def test_addition(b1: Box, b2: Box, b3: Box):
 
 
 def test_split(b1: Box):
+    assert_almost_equal(bisect(np.array([1, 2, 3]))[1][0], np.array([1, 2, 3]))
+    assert_almost_equal(bisect(np.array([1, 2, 3]))[1][1], np.array([1, 2, 3]))
     assert bisect(b1, 0)[0] == 0
     assert bisect(b1)[0] == 2
     assert bisect(b1, 0)[1][0] == b1

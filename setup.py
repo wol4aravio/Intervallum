@@ -9,7 +9,7 @@ else:
 
 setup(
     name="intervallum",
-    version="0.2.5",
+    version="0.2.6",
 
     description="Intervallum - package for interval computations",
 
