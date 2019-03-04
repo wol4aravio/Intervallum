@@ -32,6 +32,14 @@ class Box(np.ndarray):
         return Box(*[copy(i) for i in self])
 
     @property
+    def lb(self) -> np.ndarray:
+        return np.array([i.lb if isinstance(i, Interval) else i for i in self])
+
+    @property
+    def ub(self) -> np.ndarray:
+        return np.array([i.ub if isinstance(i, Interval) else i for i in self])
+
+    @property
     def middle(self) -> np.ndarray:
         return np.array([i.middle if isinstance(i, Interval) else i for i in self])
 
