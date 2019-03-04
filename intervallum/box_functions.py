@@ -9,7 +9,7 @@ from intervallum.interval_functions import shrink as i_shrink
 from intervallum.interval_functions import constrain as i_constrain
 
 
-def split(b: BoxVector, ratios: List[float], split_id: int = None) -> List[BoxVector]:
+def split(b: BoxVector, ratios: List[float], split_id: int = None) -> Tuple[int, List[BoxVector]]:
     if split_id is None:
         ids, w = b.width
         id_ = random.choice(ids)
@@ -21,10 +21,10 @@ def split(b: BoxVector, ratios: List[float], split_id: int = None) -> List[BoxVe
 
     boxes = [Box(*(part_1 + [i] + part_2)) for i in i_split(b[id_], ratios)]
     boxes = [b._try_to_reduce() for b in boxes]
-    return boxes
+    return id_, boxes
 
 
-def bisect(b: BoxVector, split_id: int = None) -> List[BoxVector]:
+def bisect(b: BoxVector, split_id: int = None) -> Tuple[int, List[BoxVector]]:
     return split(b, [1.0, 1.0], split_id)
 
 
